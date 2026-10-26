@@ -1,0 +1,691 @@
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* =====================================================
+     ELEMENTS
+  ====================================================== */
+
+  const openingScreen = document.getElementById("envelope-screen");
+  const envelope = document.getElementById("envelopeBox");
+  const openInvitationButton = document.getElementById("openInvitation");
+  const envelopePass = document.getElementById("envelopePass");
+  const heroSection = document.getElementById("heroSection");
+  const invitation = document.getElementById("invitation");
+
+  const replayButton = document.getElementById("replay-invitation");
+
+  const music = document.getElementById("weddingMusic");
+  const musicToggle = document.getElementById("musicToggle");
+  const musicCredit = document.getElementById("musicCredit");
+
+  const giftButton = document.getElementById("gift-info-button");
+  const giftModal = document.getElementById("gift-modal");
+  const bankDetailsToggle = document.getElementById("bank-details-toggle");
+  const bankDetailsCard = document.getElementById("bank-details-card");
+  const guestPhotoInput = document.getElementById("guest-photo-input");
+  const guestPhotoStatus = document.getElementById("guest-photo-status");
+  const galleryGrid = document.querySelector(".gallery-grid");
+
+  const rsvpButton = document.getElementById("rsvp-button");
+  const rsvpModal = document.getElementById("rsvp-modal");
+  const rsvpForm = document.getElementById("rsvp-form");
+  const rsvpSuccess = document.getElementById("rsvp-success");
+  const rsvpError = document.getElementById("rsvp-error");
+
+  const galleryLightbox = document.getElementById("gallery-lightbox");
+  const lightboxClose = document.getElementById("lightbox-close");
+  const lightboxCaption = document.getElementById("lightbox-caption");
+  const lightboxImage = document.getElementById("lightbox-image");
+  const lightboxPrevious = document.getElementById("lightbox-previous");
+  const lightboxNext = document.getElementById("lightbox-next");
+
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+
+
+  /* =====================================================
+     ENVELOPE OPENING
+  ====================================================== */
+
+  let openingTransitioning = false;
+  let invitationOpened = false;
+  let replayInProgress = false;
+  const reduceOpeningMotion = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  document.body.style.overflow = "hidden";
+
+  function openEnvelope() {
+    if (openingTransitioning || invitationOpened || !openingScreen || !envelope || !openInvitationButton) return;
+    if (envelope.classList.contains("opened")) return;
+    openingTransitioning = true;
+    openInvitationButton.disabled = true;
+    startMusicFromOpening();
+    envelope.classList.add("opened");
+
+    window.setTimeout(() => {
+      openingTransitioning = false;
+    }, reduceOpeningMotion ? 20 : 850);
+  }
+
+  function enterWebsite() {
+    if (invitationOpened || !openingScreen || !invitation || !envelope || !envelope.classList.contains("opened")) return;
+    invitationOpened = true;
+    openingTransitioning = true;
+    openingScreen.classList.add("is-leaving");
+    invitation.classList.remove("hidden");
+    invitation.classList.add("is-entering");
+    if (heroSection) heroSection.style.display = "block";
+
+    window.setTimeout(() => {
+      openingScreen.hidden = true;
+      document.body.style.overflow = "auto";
+      window.dispatchEvent(new CustomEvent("invitationOpened"));
+      showToast("Welcome to Dera & Ugochukwu's wedding");
+      openingTransitioning = false;
+
+      if (heroSection) {
+        heroSection.scrollIntoView({
+          behavior: reduceOpeningMotion ? "auto" : "smooth",
+          block: "start"
+        });
+      }
+    }, reduceOpeningMotion ? 20 : 700);
+  }
+
+  if (envelope) envelope.addEventListener("click", openEnvelope);
+  if (envelopePass) {
+    envelopePass.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (!event.target.closest(".open-pass-btn")) return;
+      if (!envelope || !envelope.classList.contains("opened")) return;
+      enterWebsite();
+    });
+  }
+
+  function replayEnvelopeOpening() {
+    if (openingTransitioning || replayInProgress) return;
+    replayInProgress = true;
+    if (replayButton) replayButton.disabled = true;
+
+    const resetOpening = () => {
+      if (invitation) {
+        invitation.classList.remove("is-entering", "is-replaying");
+        invitation.classList.add("hidden");
+      }
+      if (openingScreen) {
+        openingScreen.hidden = false;
+        openingScreen.classList.remove("is-leaving", "hidden");
+      }
+      if (envelope) envelope.classList.remove("opened");
+      if (heroSection) heroSection.style.display = "none";
+      if (openInvitationButton) openInvitationButton.disabled = false;
+      invitationOpened = false;
+      openingTransitioning = false;
+      replayInProgress = false;
+      if (replayButton) replayButton.disabled = false;
+      document.body.style.overflow = "hidden";
+      window.scrollTo(0, 0);
+      if (openInvitationButton) openInvitationButton.focus({ preventScroll: true });
+    };
+
+    if (invitationOpened && invitation) {
+      invitation.classList.remove("is-entering");
+      invitation.classList.add("is-replaying");
+      window.setTimeout(resetOpening, reduceOpeningMotion ? 20 : 550);
+    } else {
+      resetOpening();
+    }
+  }
+
+  if (replayButton) replayButton.addEventListener("click", replayEnvelopeOpening);
+
+
+  /* =====================================================
+     COUNTDOWN
+  ====================================================== */
+
+  const weddingDate =
+    new Date("2027-01-04T12:00:00+01:00").getTime();
+
+  const daysEl = document.getElementById("days");
+  const hoursEl = document.getElementById("hours");
+  const minutesEl = document.getElementById("minutes");
+  const secondsEl = document.getElementById("seconds");
+  const countdownGrid = document.querySelector(".countdown-grid");
+  let countdownInterval;
+
+  function updateCountdown() {
+
+    const now = Date.now();
+    const distance = weddingDate - now;
+
+    if (distance <= 0) {
+
+      clearInterval(countdownInterval);
+      countdownGrid.replaceChildren();
+
+      const completionMessage = document.createElement("p");
+      completionMessage.className = "countdown-complete";
+      completionMessage.setAttribute("role", "status");
+      completionMessage.setAttribute("aria-live", "polite");
+      completionMessage.textContent = "THE DAY IS HERE";
+      countdownGrid.appendChild(completionMessage);
+      countdownGrid.setAttribute("aria-label", "The wedding day is here");
+
+      return false;
+    }
+
+    const days =
+      Math.floor(distance / (1000 * 60 * 60 * 24));
+
+    const hours =
+      Math.floor(
+        (distance / (1000 * 60 * 60)) % 24
+      );
+
+    const minutes =
+      Math.floor(
+        (distance / (1000 * 60)) % 60
+      );
+
+    const seconds =
+      Math.floor(
+        (distance / 1000) % 60
+      );
+
+
+    updateNumber(daysEl, days);
+    updateNumber(hoursEl, hours);
+    updateNumber(minutesEl, minutes);
+    updateNumber(secondsEl, seconds);
+
+    return true;
+  }
+
+
+  function updateNumber(element, value) {
+
+    const formatted =
+      String(value).padStart(2, "0");
+
+    if (element.textContent !== formatted) {
+
+      element.textContent = formatted;
+
+      element.classList.remove("tick");
+
+      void element.offsetWidth;
+
+      element.classList.add("tick");
+
+    }
+
+  }
+
+
+  if (daysEl && hoursEl && minutesEl && secondsEl && countdownGrid && updateCountdown()) {
+    countdownInterval = setInterval(updateCountdown, 1000);
+  }
+
+
+  /* =====================================================
+     MUSIC
+  ====================================================== */
+
+  const musicSource = music && music.querySelector("source");
+  let musicAvailable = false;
+  let musicFailed = false;
+  if (music) {
+    music.loop = true;
+    music.preload = "metadata";
+  }
+
+  function syncMusicControl() {
+    if (!music || !musicToggle) return;
+
+    const playing = !music.paused && !music.ended;
+    const icon = musicToggle.querySelector(".music-note");
+    const label = document.getElementById("musicLabel");
+
+    musicToggle.classList.toggle("is-playing", playing);
+    musicToggle.setAttribute("aria-pressed", String(playing));
+    musicToggle.setAttribute(
+      "aria-label",
+      playing ? "Pause wedding music" : "Play wedding music"
+    );
+
+    if (icon) {
+      icon.textContent = playing ? "\u266b" : "\u266a";
+    }
+
+    if (label) {
+      label.textContent = playing ? "Pause music" : "Play music";
+    }
+  }
+
+  function showMusicControl() {
+    if (musicFailed || !musicToggle) return;
+
+    musicAvailable = true;
+    musicToggle.hidden = false;
+    if (musicCredit) musicCredit.hidden = false;
+    syncMusicControl();
+  }
+
+  function hideMusicControl() {
+    musicAvailable = false;
+    musicFailed = true;
+    if (musicCredit) musicCredit.hidden = true;
+    if (!musicToggle) return;
+
+    musicToggle.hidden = true;
+    musicToggle.classList.remove("is-playing");
+    musicToggle.setAttribute("aria-pressed", "false");
+    musicToggle.setAttribute("aria-label", "Play wedding music");
+  }
+
+  function startMusicFromOpening() {
+    if (!music || !musicSource || musicFailed) return;
+
+    try {
+      const playRequest = music.play();
+
+      if (playRequest && typeof playRequest.catch === "function") {
+        playRequest.catch(syncMusicControl);
+      }
+    } catch {
+      syncMusicControl();
+    }
+  }
+
+  if (music) {
+    music.addEventListener("canplay", showMusicControl);
+    music.addEventListener("playing", showMusicControl);
+    music.addEventListener("play", syncMusicControl);
+    music.addEventListener("pause", syncMusicControl);
+    music.addEventListener("ended", syncMusicControl);
+    music.addEventListener("error", hideMusicControl);
+  }
+
+  if (musicToggle) musicToggle.addEventListener("click", async () => {
+    if (!musicAvailable) return;
+
+    try {
+      if (music.paused || music.ended) {
+        if (music.ended) {
+          music.currentTime = 0;
+        }
+
+        await music.play();
+      } else {
+        music.pause();
+      }
+    } catch {
+      syncMusicControl();
+    }
+  });
+
+  if (music && musicSource) {
+    music.load();
+  } else {
+    hideMusicControl();
+  }
+
+
+  /* =====================================================
+     ACCESSIBLE MODALS AND RSVP
+  ====================================================== */
+
+  const focusableSelector =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  let activeLayer = null;
+  let layerTrigger = null;
+  let previousBodyOverflow = "";
+
+  function openLayer(layer, trigger) {
+    if (!layer) return;
+
+    if (!activeLayer) {
+      previousBodyOverflow = document.body.style.overflow;
+    } else {
+      activeLayer.classList.add("hidden");
+    }
+
+    activeLayer = layer;
+    layerTrigger = trigger || document.activeElement;
+    layer.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+
+    const firstControl = getFocusable(layer)[0];
+    (firstControl || layer).focus();
+  }
+
+  function getFocusable(layer) {
+    return Array.from(layer.querySelectorAll(focusableSelector))
+      .filter(element => element.getClientRects().length > 0);
+  }
+
+  function closeLayer(layer = activeLayer) {
+    if (!layer) return;
+
+    layer.classList.add("hidden");
+    if (layer !== activeLayer) return;
+
+    if (layer === rsvpModal && rsvpForm && rsvpSuccess) {
+      rsvpForm.reset();
+      rsvpForm.classList.remove("hidden");
+      rsvpSuccess.classList.add("hidden");
+      if (rsvpError) rsvpError.textContent = "";
+    }
+
+    activeLayer = null;
+    document.body.style.overflow = previousBodyOverflow;
+
+    if (layerTrigger && typeof layerTrigger.focus === "function") {
+      layerTrigger.focus();
+    }
+    layerTrigger = null;
+  }
+
+  if (giftButton && giftModal) {
+    giftButton.addEventListener("click", () => openLayer(giftModal, giftButton));
+  }
+
+  if (bankDetailsToggle && bankDetailsCard) {
+    bankDetailsToggle.addEventListener("click", () => {
+      const willShow = bankDetailsCard.hidden;
+      bankDetailsCard.hidden = !willShow;
+      bankDetailsToggle.setAttribute("aria-expanded", String(willShow));
+      bankDetailsToggle.textContent = willShow
+        ? "Hide bank transfer details"
+        : "Show bank transfer details";
+    });
+  }
+
+  if (rsvpButton && rsvpModal) {
+    rsvpButton.addEventListener("click", () => openLayer(rsvpModal, rsvpButton));
+  }
+
+  document.querySelectorAll("[data-modal-dismiss]").forEach(button => {
+    button.addEventListener("click", () => {
+      const layer = button.closest(".modal");
+      closeLayer(layer);
+    });
+  });
+
+  if (rsvpForm && rsvpModal && rsvpSuccess) {
+    const rsvpNameField = document.getElementById("rsvp-name");
+    if (rsvpNameField) {
+      rsvpNameField.addEventListener("input", () => {
+        rsvpNameField.setCustomValidity("");
+      });
+    }
+
+    rsvpForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const nameField = document.getElementById("rsvp-name");
+      const phoneField = document.getElementById("rsvp-phone");
+      const attendanceField = document.getElementById("rsvp-attending");
+      const guestCountField = document.getElementById("rsvp-count");
+      const messageField = document.getElementById("rsvp-message");
+      const successMessage = document.getElementById("rsvp-success-message");
+      const successTitle = document.getElementById("rsvp-success-title");
+      const submitButton = rsvpForm.querySelector('[type="submit"]');
+      if (!nameField || !attendanceField || !guestCountField || !successMessage || !successTitle || !submitButton) return;
+
+      const guestName = nameField.value.trim();
+      nameField.setCustomValidity(guestName ? "" : "Please enter your full name.");
+      if (!rsvpForm.checkValidity()) {
+        rsvpForm.reportValidity();
+        return;
+      }
+      nameField.setCustomValidity("");
+
+      if (rsvpError) rsvpError.textContent = "";
+      submitButton.disabled = true;
+      const originalButtonText = submitButton.textContent;
+      submitButton.textContent = "Sending RSVP…";
+
+      const payload = {
+        _subject: `💍 RSVP Response from ${guestName.replace(/\s+/g, " ")}: ${attendanceField.value === "yes" ? "Joyfully Attending" : "Declining"}`,
+        Guest_Name: guestName,
+        Phone_Number: phoneField ? phoneField.value.trim() : "",
+        Attendance: attendanceField.value === "yes" ? "Will attend" : "Unable to attend",
+        Guest_Count: guestCountField.value,
+        Message: messageField ? messageField.value.trim() : ""
+      };
+
+      try {
+        const response = await fetch("https://formsubmit.co/ajax/chilwelleze@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || result.success === false || result.success === "error") {
+          throw new Error(result.message || "The RSVP service did not accept the submission.");
+        }
+
+        successTitle.textContent = "Thank you!";
+        successMessage.textContent = `Thank you, ${guestName}. Your RSVP has been sent privately to the couple.`;
+        rsvpForm.classList.add("hidden");
+        rsvpSuccess.classList.remove("hidden");
+        successTitle.focus();
+      } catch (error) {
+        console.error("RSVP submission failed:", error);
+        if (rsvpError) {
+          rsvpError.textContent = "We couldn’t send your RSVP just now. Please check your connection and try again.";
+          rsvpError.focus?.();
+        }
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+    });
+  }
+
+
+  /* =====================================================
+     GALLERY LIGHTBOX
+  ====================================================== */
+
+  const galleryItems = Array.from(document.querySelectorAll(".gallery-item"));
+  let activeGalleryIndex = 0;
+
+  function showGalleryItem(index) {
+    if (!galleryItems.length || !lightboxCaption || !lightboxImage) return;
+
+    activeGalleryIndex = (index + galleryItems.length) % galleryItems.length;
+    const item = galleryItems[activeGalleryIndex];
+    const caption = item.dataset.caption || item.textContent.trim() || "Wedding memory";
+    const image = item.querySelector("img");
+
+    lightboxCaption.textContent = caption;
+    if (image) {
+      lightboxImage.src = image.getAttribute("src");
+      lightboxImage.alt = image.alt;
+    }
+  }
+
+  galleryItems.forEach((item, index) => {
+    item.addEventListener("click", () => {
+      showGalleryItem(index);
+      openLayer(galleryLightbox, item);
+    });
+  });
+
+  if (guestPhotoInput && galleryGrid) {
+    guestPhotoInput.addEventListener("change", event => {
+      const files = Array.from(event.target.files || []);
+      let added = 0;
+      let skipped = 0;
+
+      files.forEach(file => {
+        if (!file.type.startsWith("image/") || file.size > 20 * 1024 * 1024) {
+          skipped += 1;
+          return;
+        }
+
+        const previewUrl = URL.createObjectURL(file);
+        const galleryItem = document.createElement("button");
+        galleryItem.type = "button";
+        galleryItem.className = "gallery-item guest-uploaded-photo";
+        galleryItem.dataset.caption = "Guest photo";
+        galleryItem.setAttribute("aria-label", "Open guest photo in wedding gallery");
+        galleryItem.setAttribute("aria-haspopup", "dialog");
+        galleryItem.setAttribute("aria-controls", "gallery-lightbox");
+
+        const image = document.createElement("img");
+        image.src = previewUrl;
+        image.alt = "Guest-uploaded wedding moment";
+        image.loading = "lazy";
+        image.decoding = "async";
+
+        const caption = document.createElement("span");
+        caption.textContent = "Guest Photo";
+        galleryItem.append(image, caption);
+        galleryGrid.prepend(galleryItem);
+        galleryItems.push(galleryItem);
+
+        galleryItem.addEventListener("click", () => {
+          const photoIndex = galleryItems.indexOf(galleryItem);
+          if (photoIndex < 0) return;
+          showGalleryItem(photoIndex);
+          openLayer(galleryLightbox, galleryItem);
+        });
+
+        added += 1;
+      });
+
+      if (guestPhotoStatus) {
+        if (added && skipped) {
+          guestPhotoStatus.textContent = `${added} photo${added === 1 ? "" : "s"} added to the gallery preview. ${skipped} unsupported or over-20 MB file${skipped === 1 ? " was" : "s were"} skipped.`;
+        } else if (added) {
+          guestPhotoStatus.textContent = `${added} photo${added === 1 ? "" : "s"} added to the gallery preview on this device.`;
+        } else if (skipped) {
+          guestPhotoStatus.textContent = "Choose image files smaller than 20 MB to preview them in the gallery.";
+        } else {
+          guestPhotoStatus.textContent = "No photos selected.";
+        }
+      }
+
+      event.target.value = "";
+
+      if (added) {
+        if (galleryGrid) {
+          galleryGrid.scrollIntoView({
+            behavior: reduceOpeningMotion ? "auto" : "smooth",
+            block: "center"
+          });
+        }
+        showToast(`${added} photo${added === 1 ? " is" : "s are"} now previewed in the wedding gallery.`);
+      }
+    });
+  }
+
+  if (lightboxPrevious) {
+    lightboxPrevious.addEventListener("click", () => showGalleryItem(activeGalleryIndex - 1));
+  }
+
+  if (lightboxNext) {
+    lightboxNext.addEventListener("click", () => showGalleryItem(activeGalleryIndex + 1));
+  }
+
+  if (lightboxClose) {
+    lightboxClose.addEventListener("click", () => closeLayer(galleryLightbox));
+  }
+
+  if (galleryLightbox) {
+    galleryLightbox.addEventListener("click", event => {
+      if (event.target === galleryLightbox) closeLayer(galleryLightbox);
+    });
+  }
+
+  document.addEventListener("keydown", event => {
+    if (!activeLayer) return;
+
+    if (event.key === "Escape") {
+      closeLayer(activeLayer);
+      return;
+    }
+
+    if (activeLayer === galleryLightbox && event.key === "ArrowRight") {
+      event.preventDefault();
+      showGalleryItem(activeGalleryIndex + 1);
+    } else if (activeLayer === galleryLightbox && event.key === "ArrowLeft") {
+      event.preventDefault();
+      showGalleryItem(activeGalleryIndex - 1);
+    }
+
+    if (event.key === "Tab") {
+      const focusable = getFocusable(activeLayer);
+      if (!focusable.length) {
+        event.preventDefault();
+        activeLayer.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+
+  /* =====================================================
+     TOAST
+  ====================================================== */
+
+  let toastTimer;
+
+  function showToast(message) {
+    if (!toast || !toastMessage) return;
+
+    toastMessage.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+
+      toast.classList.remove("show");
+
+    }, 3000);
+
+  }
+
+
+  /* =====================================================
+     INITIAL BODY STATE
+  ====================================================== */
+
+  document.body.style.overflow = "hidden";
+
+
+  /* =====================================================
+     EVENT FOR FUTURE FEATURES
+  ====================================================== */
+
+  window.addEventListener(
+    "invitationOpened",
+    () => {
+
+      console.log(
+        "Wedding invitation opened successfully."
+      );
+
+    }
+  );
+
+});

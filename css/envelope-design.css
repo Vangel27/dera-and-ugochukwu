@@ -1,0 +1,1322 @@
+/* VANGEL27 envelope opening, scoped to the intro so it cannot alter site sections. */
+#envelope-intro {
+  --envelope-olive: #41482a;
+  --envelope-olive-light: #515a35;
+  --envelope-ivory: #f8f5ec;
+  --envelope-gold: #b59a5a;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--envelope-ivory);
+  padding: 40px 20px;
+  color: var(--envelope-olive);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .7s ease, visibility .7s ease;
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+#envelope-intro *, #envelope-intro *::before, #envelope-intro *::after { box-sizing: border-box; }
+#envelope-intro[hidden] { display: none; }
+#envelope-intro.is-leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+#envelope-intro .envelope-scene {
+  width: min(100%, 520px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  perspective: 1200px;
+}
+#envelope-intro .envelope {
+  position: relative;
+  width: min(88vw, 420px);
+  height: min(61vw, 290px);
+  min-height: 220px;
+  max-height: 290px;
+  background: var(--envelope-olive);
+  isolation: isolate;
+  animation: none;
+}
+#envelope-intro .envelope-back { position: absolute; inset: 0; z-index: 0; background: var(--envelope-olive); }
+#envelope-intro .invitation-card {
+  position: absolute;
+  z-index: 1;
+  left: 8%;
+  top: 7%;
+  width: 84%;
+  height: 86%;
+  padding: 22px 12px;
+  text-align: center;
+  color: var(--envelope-olive);
+  background: #fffdf6;
+  border: 1px solid var(--envelope-gold);
+  opacity: 0;
+  transform: translateY(65px);
+  transition: transform 1.3s cubic-bezier(.2, .75, .25, 1), opacity .6s ease;
+}
+#envelope-intro .invitation-eagle { width: 34px; height: 34px; object-fit: contain; }
+#envelope-intro .invitation-brand { margin: 4px 0 8px; font-size: 11px; letter-spacing: 5px; }
+#envelope-intro .invitation-label { margin: 0; font-size: 8px; letter-spacing: 2px; }
+#envelope-intro .invitation-card h1 { margin: 12px 0; font-family: Georgia, serif; font-size: clamp(20px, 5vw, 28px); font-weight: normal; }
+#envelope-intro .invitation-card h1 span { color: var(--envelope-gold); font-style: italic; }
+#envelope-intro .invitation-card p { line-height: 1.5; }
+#envelope-intro .invitation-card > p:not(.invitation-brand):not(.invitation-label) { margin: 3px 0; font-size: 9px; letter-spacing: 1px; }
+#envelope-intro .invitation-divider { width: 55px; height: 1px; margin: 12px auto; background: var(--envelope-gold); }
+#envelope-intro .invitation-date { font-family: Georgia, serif; font-size: 16px !important; }
+#envelope-intro .envelope-front {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: var(--envelope-olive);
+  clip-path: polygon(0 0, 50% 53%, 100% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+#envelope-intro .envelope-cover-content {
+  position: absolute;
+  z-index: 6;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: 94%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+#envelope-intro .cover-eagle {
+  display: block;
+  width: clamp(65px, 12vw, 100px);
+  height: auto;
+  max-height: 90px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+}
+#envelope-intro .cover-brand {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(19px, 3vw, 27px);
+  font-weight: 500;
+  letter-spacing: 3px;
+  color: var(--envelope-gold);
+  line-height: 1.2;
+}
+#envelope-intro .cover-invitation-text {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(9px, 2.3vw, 15px);
+  font-weight: 500;
+  letter-spacing: clamp(1px, 0.3vw, 2.5px);
+  line-height: 1.4;
+  color: var(--envelope-ivory);
+}
+#envelope-intro .envelope-flap {
+  position: absolute;
+  z-index: 4;
+  inset: 0 0 auto;
+  height: 58%;
+  background: var(--envelope-olive-light);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform .85s ease;
+  backface-visibility: visible;
+  pointer-events: none;
+  animation: none;
+}
+#envelope-intro .envelope-seal {
+  position: absolute;
+  z-index: 5;
+  top: 88%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #d4bd83;
+  border-radius: 50%;
+  background: var(--envelope-gold);
+  cursor: pointer;
+  transition: opacity .3s ease, transform .3s ease;
+}
+#envelope-intro .envelope-seal img { width: 34px; height: 34px; object-fit: contain; }
+#envelope-intro .envelope-seal:focus-visible, #envelope-intro .continue-invitation:focus-visible { outline: 3px solid var(--envelope-gold); outline-offset: 4px; }
+#envelope-intro .envelope-instruction { margin: 0; color: var(--envelope-olive); font: 500 11px "DM Sans", Arial, sans-serif; letter-spacing: 3px; text-align: center; }
+#envelope-intro .continue-invitation {
+  padding: 14px 22px;
+  border: 1px solid var(--envelope-olive);
+  background: var(--envelope-olive);
+  color: var(--envelope-ivory);
+  font: 500 .75rem "DM Sans", Arial, sans-serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform .25s ease, background .25s ease;
+}
+#envelope-intro .continue-invitation[hidden] { display: none !important; }
+#envelope-intro .continue-invitation:hover { transform: translateY(-2px); background: var(--envelope-olive-light); }
+#envelope-intro .continue-invitation:active { transform: translateY(0); }
+#envelope-intro.is-opening .envelope-flap { transform: rotateX(180deg); }
+#envelope-intro.is-opening .envelope-seal { opacity: 0; pointer-events: none; }
+#envelope-intro.is-opening .envelope-cover-content { opacity: 0; }
+#envelope-intro.is-opening .invitation-card { z-index: 3; opacity: 1; transform: translateY(-75px); transition-delay: .35s; }
+#envelope-intro.is-open .invitation-card { transform: translateY(-95px); }
+#envelope-intro.is-open .continue-invitation { display: inline-block; }
+
+@media (max-width: 420px) {
+  #envelope-intro .envelope { height: 235px; }
+  #envelope-intro .invitation-card { padding-top: 15px; }
+}
+
+@media (max-width: 380px) {
+  #envelope-intro .envelope-cover-content { width: 96%; }
+  #envelope-intro .cover-invitation-text { font-size: 9px; letter-spacing: .8px; }
+  #envelope-intro .cover-brand { font-size: 19px; letter-spacing: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #envelope-intro .envelope-flap, #envelope-intro .invitation-card, #envelope-intro .envelope-seal { transition-duration: .01ms; }
+}
+
+/* FIX: PREVENT THE EAGLE FROM FILLING THE SCREEN */
+
+#envelope-intro {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #f8f5ec;
+}
+
+/* Branding above the envelope */
+#envelope-intro .invitation-branding {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    z-index: 10;
+}
+
+/* Restrict the eagle image to its intended size */
+#envelope-intro .branding-eagle {
+    display: block !important;
+    position: relative !important;
+    width: 76px !important;
+    height: 76px !important;
+    max-width: 76px !important;
+    max-height: 76px !important;
+    object-fit: contain !important;
+    margin: 0 auto 8px !important;
+}
+
+/* Keep the envelope below the branding */
+#envelope-intro .envelope-scene {
+    position: relative;
+    width: min(90%, 420px);
+    margin: 20px auto 0;
+}
+
+/* Prevent the envelope from stretching across the page */
+#envelope-intro .envelope {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+/* Keep the invitation wording on one line */
+#envelope-intro .branding-message {
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* Style the updated card heading */
+#envelope-intro .invitation-heading {
+    margin: 12px 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(14px, 3.5vw, 20px);
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+/* Move the branding higher above the envelope */
+#envelope-intro .invitation-branding {
+    transform: translateY(-12px);
+}
+
+/* Remove any remaining branding inside the envelope */
+#envelope-intro .envelope .cover-eagle,
+#envelope-intro .envelope .cover-brand,
+#envelope-intro .envelope .cover-invitation-text {
+    display: none !important;
+}
+
+/* Centre the eagle seal on the envelope */
+#envelope-intro .envelope-seal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+}
+
+/* Invitation card typography */
+#envelope-intro .invitation-card-content {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 20px 12px;
+    color: #41482a;
+}
+
+#envelope-intro .invitation-eyebrow {
+    margin: 0 0 12px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(12px, 2.5vw, 17px);
+    letter-spacing: 1.5px;
+}
+
+#envelope-intro .couple-names {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(20px, 4.5vw, 30px);
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+#envelope-intro .couple-names span {
+    color: #b59a5a;
+    font-style: italic;
+}
+
+#envelope-intro .invitation-divider {
+    width: 55px;
+    height: 1px;
+    background: #b59a5a;
+    margin: 14px auto;
+}
+
+#envelope-intro .invitation-date {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 15px;
+}
+
+/* VANGEL27 BRANDING SPACING */
+#envelope-intro .invitation-branding {
+    gap: 0;
+}
+
+#envelope-intro .branding-eagle {
+    margin-bottom: 2px !important;
+}
+
+#envelope-intro .branding-name {
+    margin-top: 0 !important;
+    margin-bottom: 16px !important;
+    line-height: 1.15;
+}
+
+#envelope-intro .branding-message {
+    margin-top: 0 !important;
+}
+
+#envelope-intro .envelope-instruction {
+    margin: 18px 0 0;
+    font-family: "DM Sans", Arial, sans-serif;
+    font-size: clamp(14px, 2vw, 17px);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    line-height: 1.5;
+}
+
+#envelope-intro .continue-invitation {
+    min-height: 50px;
+    margin-top: 0;
+    padding: 14px 28px;
+    border: 2px solid #41482a;
+    border-radius: 2px;
+    background: #41482a;
+    color: #f8f5ec;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    line-height: 1.3;
+}
+
+#envelope-intro .continue-invitation:hover {
+    border-color: #515a35;
+    background: #515a35;
+    transform: translateY(-2px);
+}
+
+#envelope-intro .continue-invitation:disabled {
+    cursor: wait;
+    opacity: .8;
+}
+
+@media (max-height: 650px) {
+    #envelope-intro {
+        gap: 12px;
+        padding: 20px 16px;
+    }
+
+    #envelope-intro .envelope-scene {
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    #envelope-intro .envelope-instruction {
+        margin-top: 0;
+    }
+}
+
+/* EMERGING INVITATION CARD */
+#envelope-intro .invitation-card {
+    background: #f8f5ec;
+    border: 1px solid #b59a5a;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+#envelope-intro .invitation-card-content {
+    width: 100%;
+    padding: 22px 12px;
+    text-align: center;
+    color: #41482a;
+}
+
+#envelope-intro .invitation-eyebrow {
+    margin: 0 0 14px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(12px, 2.8vw, 17px);
+    letter-spacing: 1.2px;
+    line-height: 1.5;
+}
+
+#envelope-intro .couple-names {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(20px, 4.5vw, 29px);
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+#envelope-intro .couple-names span {
+    color: #b59a5a;
+    font-style: italic;
+}
+
+#envelope-intro .invitation-date {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+/* Show the existing floral artwork on the opaque envelope front. */
+#envelope-intro .envelope-front::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("../assets/images/opening-florals.png") center / 100% auto no-repeat;
+    opacity: .72;
+    pointer-events: none;
+}
+
+/* CURRENT WEDDING INVITATION OPENING */
+#invitation-opening {
+  --opening-olive: var(--olive-green);
+  --opening-deep-olive: var(--deep-olive);
+  --opening-ivory: var(--ivory);
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  min-height: 100svh;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(20px, 4vh, 36px);
+  box-sizing: border-box;
+  padding: 28px 16px;
+  overflow: hidden;
+  background: var(--off-white);
+  color: var(--opening-olive);
+  font-family: var(--elegant);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .7s ease, visibility .7s ease;
+}
+
+#invitation-opening.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#invitation-opening .opening-brand {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#invitation-opening .opening-eagle {
+  display: block;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 2px;
+  object-fit: contain;
+}
+
+#invitation-opening .opening-brand-name {
+  margin: 0 0 14px;
+  color: var(--opening-olive);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 27px;
+  letter-spacing: 3px;
+  line-height: 1.15;
+}
+
+#invitation-opening .opening-invitation-label {
+  margin: 0;
+  color: var(--opening-olive);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(10px, 2.7vw, 14px);
+  letter-spacing: 1.5px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+#invitation-opening .envelope-scene {
+  display: flex;
+  width: min(100%, 420px);
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  perspective: 1100px;
+}
+
+#invitation-opening #weddingEnvelope {
+  position: relative;
+  width: min(88vw, 420px);
+  height: clamp(220px, 61vw, 270px);
+  max-height: 290px;
+  isolation: isolate;
+  cursor: default;
+  background: var(--opening-olive);
+  border: 1px solid var(--champagne-gold);
+  transform: none;
+  transform-style: preserve-3d;
+  transition: none;
+  box-shadow: 0 24px 48px rgba(48, 53, 31, .2);
+  animation: none;
+}
+
+#invitation-opening #weddingEnvelope:hover {
+  transform: none;
+}
+
+#invitation-opening .envelope-front {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: var(--opening-olive);
+  border: 0;
+  clip-path: polygon(0 40%, 50% 78%, 100% 40%, 100% 100%, 0 100%);
+  box-shadow: none;
+  pointer-events: none;
+}
+
+#invitation-opening .envelope-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../assets/images/opening-florals.png") center / 100% auto no-repeat;
+  opacity: .48;
+  pointer-events: none;
+}
+
+#invitation-opening .envelope-flap {
+  position: absolute;
+  z-index: 3;
+  inset: 0 0 auto;
+  height: 60%;
+  background: var(--opening-deep-olive);
+  border: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transition: transform .85s ease;
+  backface-visibility: visible;
+  filter: none;
+  pointer-events: none;
+}
+
+#invitation-opening .envelope-seal {
+  position: absolute;
+  z-index: 4;
+  top: 58%;
+  left: 50%;
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid var(--opening-olive);
+  border-radius: 50%;
+  background: var(--opening-ivory);
+  color: var(--opening-olive);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 600;
+  transform: translate(-50%, -50%);
+  transition: opacity .3s ease, transform .3s ease;
+  cursor: pointer;
+}
+
+#invitation-opening .envelope-seal:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+#invitation-opening .envelope-seal:focus-visible {
+  outline: 3px solid var(--champagne-gold);
+  outline-offset: 4px;
+}
+
+#invitation-opening .open-invitation-instruction {
+  margin: 0;
+  color: var(--opening-olive);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-align: center;
+}
+
+@media (max-width: 380px) {
+  #invitation-opening {
+    gap: 20px;
+    padding-inline: 12px;
+  }
+
+  #invitation-opening .opening-eagle {
+    width: 64px;
+    height: 64px;
+  }
+
+  #invitation-opening .opening-brand-name {
+    font-size: 23px;
+  }
+
+  #invitation-opening .opening-invitation-label {
+    font-size: 10px;
+    letter-spacing: .8px;
+  }
+}
+
+/* MODULAR SAGE ENVELOPE AND COUPLE INTRO */
+#envelope-screen {
+  --sage-main: #98ae97;
+  --sage-dark: #829a81;
+  --sage-light: #adc0ac;
+  --gold-seal: #d4af37;
+  --gold-dark: #b8972a;
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 36px 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  background: #f8f5ec;
+  transition: opacity .6s ease, transform .6s ease;
+}
+
+#envelope-screen.is-leaving {
+  opacity: 0;
+  transform: scale(.985);
+  pointer-events: none;
+}
+
+#envelope-screen .envelope-intro-title {
+  text-align: center;
+  color: #41482a;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+#envelope-screen .envelope-intro-title > span {
+  display: block;
+  color: #737857;
+  font-family: 'Great Vibes', cursive, serif;
+  font-size: clamp(21px, 5vw, 27px);
+}
+
+#envelope-screen .envelope-intro-title h2 {
+  margin: 5px 0 0;
+  color: #41482a;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+#envelope-screen .envelope-box {
+  position: relative;
+  width: min(290px, 100%);
+  aspect-ratio: 1.45;
+  margin: 32px 0;
+  perspective: 900px;
+  cursor: pointer;
+  isolation: isolate;
+}
+
+#envelope-screen .envelope-body,
+#envelope-screen .env-flap-left,
+#envelope-screen .env-flap-right,
+#envelope-screen .env-flap-bottom,
+#envelope-screen .env-flap-top {
+  position: absolute;
+  inset: 0;
+}
+
+#envelope-screen .envelope-body {
+  border-radius: 6px;
+  background: var(--sage-main);
+  box-shadow: 0 14px 28px rgba(78, 93, 77, .2);
+}
+
+#envelope-screen .env-flap-left {
+  z-index: 3;
+  clip-path: polygon(0 0, 0 100%, 50% 55%);
+  background: var(--sage-light);
+}
+
+#envelope-screen .env-flap-right {
+  z-index: 3;
+  clip-path: polygon(100% 0, 100% 100%, 50% 55%);
+  background: var(--sage-dark);
+}
+
+#envelope-screen .env-flap-bottom {
+  z-index: 4;
+  clip-path: polygon(0 100%, 100% 100%, 50% 48%);
+  background: var(--sage-main);
+}
+
+#envelope-screen .env-flap-top {
+  z-index: 5;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  clip-path: polygon(0 0, 100% 0, 50% 55%);
+  background: #a9beaa;
+  transition: transform .8s cubic-bezier(.4, 0, .2, 1);
+}
+
+#envelope-screen .wax-seal {
+  position: absolute;
+  z-index: 6;
+  top: 55%;
+  left: 50%;
+  display: flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(255, 247, 214, .7);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f4d26f, var(--gold-seal) 60%, var(--gold-dark));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
+  cursor: pointer;
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+#envelope-screen .wax-seal:focus-visible,
+#envelope-screen .inner-card-pass:focus-visible {
+  outline: 3px solid #41482a;
+  outline-offset: 4px;
+}
+
+#envelope-screen .wax-seal svg { width: 21px; height: 21px; fill: #fff7d6; }
+
+#envelope-screen .inner-card-pass {
+  position: absolute;
+  z-index: 2;
+  bottom: 4%;
+  left: 4%;
+  display: flex;
+  width: 92%;
+  height: 87%;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #edebe6;
+  border-radius: 4px;
+  background: #fffff0;
+  box-shadow: 0 -3px 12px rgba(0, 0, 0, .08);
+  text-align: left;
+  cursor: pointer;
+  transition: transform .8s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+#envelope-screen .pass-info {
+  display: flex;
+  min-width: 0;
+  flex: 1.2;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 8px;
+  border-right: 1px dashed #dcdde1;
+}
+
+#envelope-screen .pass-info small { color: #737857; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; }
+#envelope-screen .pass-info strong { margin: 3px 0; color: #41482a; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 16px; }
+#envelope-screen .pass-date { color: #41482a; font-size: 12px; }
+#envelope-screen .open-btn-tag { margin-top: 8px; padding: 5px 6px; border-radius: 3px; background: var(--sage-main); color: #fff; font: 10px sans-serif; letter-spacing: .8px; text-align: center; text-transform: uppercase; }
+#envelope-screen .pass-photo { display: flex; flex: .8; align-items: center; justify-content: center; }
+#envelope-screen .pass-photo img { width: min(72px, 100%); height: 82px; object-fit: cover; border: 4px solid #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, .15); transform: rotate(3deg); }
+
+#envelope-screen .envelope-box.opened .env-flap-top { z-index: 1; transform: rotateX(180deg); }
+#envelope-screen .envelope-box.opened .wax-seal { opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(.8); }
+#envelope-screen .envelope-box.opened .inner-card-pass { z-index: 10; transform: translateY(-75%); }
+#envelope-screen .envelope-intro-footer { color: #41482a; font-family: 'Great Vibes', cursive, serif; font-size: 30px; text-align: center; }
+
+#invitation .hero-transition-section {
+  display: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #f8f5ec;
+  color: #41482a;
+  text-align: center;
+}
+
+#invitation .hero-main-photo { display: block; width: 100%; height: min(76vh, 720px); object-fit: cover; object-position: center 25%; }
+#invitation .hero-names-block { padding: 30px 20px 10px; }
+#invitation .hero-names-block h1 { margin: 0 0 6px; color: #41482a; font-family: 'Great Vibes', cursive, serif; font-size: clamp(38px, 7vw, 58px); font-weight: 400; }
+#invitation .hero-names-block h1 span { color: #b59a5a; }
+#invitation .hero-names-block p { margin: 0; color: #737857; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
+#invitation .hero-quote-block { max-width: 720px; box-sizing: border-box; margin: 0 auto; padding: 12px 24px 38px; color: #41482a; font-family: Georgia, 'Times New Roman', serif; font-size: 16px; font-style: italic; line-height: 1.7; }
+
+@media (max-width: 600px) {
+  #envelope-screen { padding: 30px 16px; }
+  #envelope-screen .envelope-box { width: min(290px, 90vw); }
+  #invitation .hero-main-photo { height: min(72vh, 620px); }
+  #invitation .hero-quote-block { padding-inline: 20px; font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #envelope-screen,
+  #envelope-screen .env-flap-top,
+  #envelope-screen .wax-seal,
+  #envelope-screen .inner-card-pass { transition-duration: .01ms !important; }
+}
+
+/* OLIVE INTRO SLIDES — scoped so the existing site sections retain their styling */
+#envelope-screen {
+  --olive-primary: #556b2f;
+  --olive-light: #6e7f4e;
+  --olive-flap: #809260;
+  --ivory: #fffff0;
+  --off-white: #faf9f6;
+  --gold-seal: #d4af37;
+  --text-dark: #2a3324;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: none;
+  padding: 28px 20px;
+  background: var(--off-white);
+  color: var(--text-dark);
+}
+
+#envelope-screen .eagle-badge { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+#envelope-screen .opening-eagle { display: block; width: 58px; height: 58px; object-fit: contain; }
+#envelope-screen .brand-vangel { color: var(--olive-primary); font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; letter-spacing: 3px; }
+#envelope-screen .intro-cordially-text { margin: 6px 0 0; color: var(--text-dark); font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(11px, 2.6vw, 15px); letter-spacing: 2px; line-height: 1.3; white-space: nowrap; }
+
+#envelope-screen .envelope-box { width: min(300px, 88vw); height: auto; aspect-ratio: 300 / 205; margin: 16px 0; perspective: 1000px; }
+#envelope-screen .env-body,
+#envelope-screen .env-flap-left,
+#envelope-screen .env-flap-right,
+#envelope-screen .env-flap-bottom,
+#envelope-screen .env-flap-top { position: absolute; inset: 0; }
+#envelope-screen .env-body { border-radius: 6px; background: var(--olive-primary); box-shadow: 0 16px 30px rgba(42, 51, 36, .25); }
+#envelope-screen .env-flap-left { z-index: 3; clip-path: polygon(0 0, 0 100%, 50% 55%); background: var(--olive-light); }
+#envelope-screen .env-flap-right { z-index: 3; clip-path: polygon(100% 0, 100% 100%, 50% 55%); background: #475a26; }
+#envelope-screen .env-flap-bottom { z-index: 4; clip-path: polygon(0 100%, 100% 100%, 50% 48%); background: var(--olive-primary); }
+#envelope-screen .env-flap-top { z-index: 5; clip-path: polygon(0 0, 100% 0, 50% 55%); background: var(--olive-flap); transform-origin: top center; transform-style: preserve-3d; backface-visibility: hidden; transition: transform .8s cubic-bezier(.4, 0, .2, 1); }
+#envelope-screen .wax-seal { top: 55%; width: 52px; height: 52px; border: 2px solid #efdc9a; background: radial-gradient(circle at 35% 35%, #ffe28a, var(--gold-seal) 60%, #997819); box-shadow: 0 4px 12px rgba(0, 0, 0, .3); cursor: pointer; }
+
+#envelope-screen .pass-card { position: absolute; z-index: 2; bottom: 4%; left: 4%; display: flex; width: 92%; height: 88%; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: center; padding: 14px; border: 1px solid #e5e3d7; border-radius: 4px; background: var(--ivory); box-shadow: 0 -4px 14px rgba(0, 0, 0, .1); text-align: center; transition: transform .8s cubic-bezier(.34, 1.56, .64, 1); }
+#envelope-screen .pass-card h2 { margin: 0 0 7px; color: var(--olive-primary); font-family: 'Cormorant Garamond', Georgia, serif; font-size: 13px; letter-spacing: 1.4px; text-transform: uppercase; }
+#envelope-screen .pass-card h3 { margin: 0 0 11px; color: var(--text-dark); font-family: 'Great Vibes', cursive; font-size: clamp(23px, 7vw, 31px); font-weight: 400; line-height: 1.1; }
+#envelope-screen .open-pass-btn { padding: 9px 17px; border: 0; border-radius: 22px; background: var(--olive-primary); color: var(--ivory); font-family: 'Cormorant Garamond', Georgia, serif; font-size: 13px; letter-spacing: .7px; cursor: pointer; box-shadow: 0 4px 8px rgba(85, 107, 47, .25); }
+#envelope-screen .open-pass-btn:hover { background: var(--olive-light); }
+#envelope-screen .open-pass-btn:focus-visible { outline: 3px solid var(--gold-seal); outline-offset: 3px; }
+#envelope-screen .envelope-box.opened .env-flap-top { z-index: 1; transform: rotateX(180deg); }
+#envelope-screen .envelope-box.opened .wax-seal { opacity: 0; pointer-events: none; }
+#envelope-screen .envelope-box.opened .pass-card { z-index: 10; transform: translateY(-78%); }
+#envelope-screen .envelope-intro-footer { color: var(--olive-primary); font-family: 'Great Vibes', cursive; font-size: 28px; }
+
+#invitation .hero-transition-section,
+#invitation #dateVenueSlide {
+  --olive-primary: #556b2f;
+  --ivory: #fffff0;
+  --off-white: #faf9f6;
+  --text-dark: #2a3324;
+  --gold-accent: #c5a059;
+  max-width: none;
+  background: var(--off-white);
+  color: var(--text-dark);
+}
+#invitation .slide-two-hero { padding: 30px 16px 34px; }
+#invitation .portrait-frame-container { position: relative; width: min(78vw, 340px); height: auto; aspect-ratio: 3 / 4; box-sizing: border-box; margin: 0 auto; padding: 24px; border: 2px solid #b89b51; border-radius: 0; background-color: var(--ivory); background-image: url('../assets/images/opening-florals.png'); background-position: center; background-repeat: no-repeat; background-size: 100% 100%; box-shadow: 0 10px 26px rgba(42, 51, 36, .16); }
+#invitation .portrait-inner-photo { display: block; width: 100%; height: 100%; border: 1px solid rgba(184, 155, 81, .8); border-radius: 0; background: var(--off-white); object-fit: contain; object-position: center; }
+#invitation .hero-names-script { margin: 20px 0 4px; color: var(--olive-primary, #556b2f); font-family: 'Great Vibes', cursive; font-size: clamp(38px, 8vw, 54px); font-weight: 400; }
+#invitation .hero-sub { margin: 0; color: #6e7f4e; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
+
+#invitation #dateVenueSlide { padding: 22px 18px 30px; }
+#invitation #dateVenueSlide .details-card { max-width: 560px; margin: 0 auto; padding: 24px 20px; border: 1px solid #d7c99e; border-radius: 8px; background: var(--ivory); box-shadow: 0 5px 18px rgba(42, 51, 36, .07); text-align: center; }
+#invitation #dateVenueSlide .wedding-date-heading { margin: 0 0 20px; padding-bottom: 12px; border-bottom: 1px solid #e4decf; color: var(--olive-primary, #556b2f); font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; letter-spacing: 2px; }
+#invitation #dateVenueSlide .event-block + .event-block { margin-top: 21px; }
+#invitation #dateVenueSlide .event-label { margin: 0 0 5px; color: var(--olive-primary, #556b2f); font-family: 'Cormorant Garamond', Georgia, serif; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; }
+#invitation #dateVenueSlide .event-time { margin: 0 0 6px; color: var(--text-dark, #2a3324); font-size: 15px; font-weight: 600; }
+#invitation #dateVenueSlide .event-venue { max-width: 420px; margin: 0 auto; color: #4b5445; font-size: 14px; line-height: 1.6; }
+
+@media (max-width: 380px) {
+  #envelope-screen { padding: 20px 12px; }
+  #envelope-screen .opening-eagle { width: 50px; height: 50px; }
+  #envelope-screen .envelope-box { width: min(300px, 92vw); }
+  #invitation .portrait-frame-container { width: min(86vw, 320px); padding: 18px; }
+}
+
+/* FINAL INTRO CARD AND PRAYER SLIDE REFINEMENTS */
+#envelope-screen .pass-card {
+  border: 3px double #c5a059;
+  padding: 9px;
+}
+
+#envelope-screen .pass-frame-border {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 7px;
+  border: 1px solid rgba(197, 160, 89, .72);
+  text-align: center;
+}
+
+#envelope-screen .pass-frame-border::before {
+  position: absolute;
+  inset: 3px;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(#c5a059, #c5a059) left top / 15px 1px no-repeat,
+    linear-gradient(#c5a059, #c5a059) left top / 1px 15px no-repeat,
+    linear-gradient(#c5a059, #c5a059) right top / 15px 1px no-repeat,
+    linear-gradient(#c5a059, #c5a059) right top / 1px 15px no-repeat,
+    linear-gradient(#c5a059, #c5a059) left bottom / 15px 1px no-repeat,
+    linear-gradient(#c5a059, #c5a059) left bottom / 1px 15px no-repeat,
+    linear-gradient(#c5a059, #c5a059) right bottom / 15px 1px no-repeat,
+    linear-gradient(#c5a059, #c5a059) right bottom / 1px 15px no-repeat;
+}
+
+#envelope-screen .pass-card h2 {
+  margin: 0 0 5px;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  line-height: 1.3;
+}
+
+#envelope-screen .pass-card h3 {
+  margin: 0 0 9px;
+  color: #2a3324;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(20px, 6vw, 25px);
+  font-weight: 600;
+  letter-spacing: .2px;
+  line-height: 1.15;
+  white-space: normal;
+}
+
+#envelope-screen .tap-hint {
+  margin: 0;
+  color: #6e7f4e;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-align: center;
+  animation: envelopeHintPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes envelopeHintPulse {
+  0%, 100% { opacity: .68; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-2px); }
+}
+
+#invitation #dateVenueSlide .details-card {
+  padding: clamp(24px, 7vw, 38px) clamp(20px, 7vw, 38px);
+}
+
+#invitation #dateVenueSlide .wedding-date-heading {
+  margin-bottom: 18px;
+  color: #556b2f;
+  font-size: clamp(22px, 6vw, 28px);
+  letter-spacing: 1px;
+  line-height: 1.25;
+  text-transform: none;
+}
+
+#invitation #dateVenueSlide .prayer-body-text {
+  max-width: 520px;
+  margin: 0 auto;
+  color: #4a5444;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(17px, 4vw, 20px);
+  font-style: italic;
+  line-height: 1.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #envelope-screen .tap-hint { animation: none; }
+}
+
+/* WEDDING MUSIC CONTROL AND REQUIRED CREDIT */
+#invitation .music-toggle,
+#invitation .music-toggle.is-playing {
+  border-color: #c5a059;
+  background: #556b2f;
+  color: #fffff0;
+}
+
+#invitation .music-toggle:hover,
+#invitation .music-control:hover {
+  background: #6e7f4e;
+  color: #fffff0;
+}
+
+#invitation .music-toggle:focus-visible {
+  outline: 2px solid #c5a059;
+  outline-offset: 4px;
+}
+
+#invitation .music-credit {
+  position: fixed;
+  z-index: 999;
+  right: 16px;
+  bottom: 72px;
+  width: min(320px, calc(100vw - 32px));
+  box-sizing: border-box;
+  margin: 0;
+  padding: 7px 10px;
+  border: 1px solid rgba(197, 160, 89, .65);
+  border-radius: 8px;
+  background: rgba(255, 255, 240, .96);
+  color: #41482a;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: right;
+  box-shadow: 0 3px 12px rgba(42, 51, 36, .1);
+}
+
+#invitation .music-credit[hidden] { display: none !important; }
+#invitation .music-credit a { color: #556b2f; text-decoration: underline; text-underline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  #invitation-opening,
+  #invitation-opening .envelope-flap,
+  #invitation-opening .envelope-seal {
+    transition-duration: .01ms !important;
+  }
+}
+
+/* Restore the original layered envelope and emerging invitation card. */
+#invitation-opening #weddingEnvelope {
+  overflow: visible;
+  border: 1px solid var(--champagne-gold);
+  border-radius: 4px;
+  background: linear-gradient(145deg, var(--olive-green), var(--deep-olive));
+  box-shadow: 0 24px 56px rgba(48, 53, 31, .2), inset 0 0 0 4px rgba(197, 161, 91, .12);
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  cursor: default;
+}
+
+#invitation-opening .envelope-back {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border: 0;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(118deg, rgba(255, 255, 255, .018) 0 1px, transparent 1px 5px),
+    radial-gradient(ellipse at 50% 10%, rgba(166, 173, 139, .2), transparent 55%),
+    linear-gradient(145deg, var(--olive-green), var(--deep-olive));
+}
+
+#invitation-opening .envelope-card {
+  position: absolute;
+  z-index: 1;
+  top: 2%;
+  left: 8%;
+  width: 84%;
+  height: 96%;
+  min-height: 0;
+  box-sizing: border-box;
+  border: 1px solid rgba(197, 161, 91, .78);
+  border-radius: 3px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, .65), transparent 62%),
+    repeating-linear-gradient(0deg, rgba(83, 90, 50, .025) 0 1px, transparent 1px 4px),
+    var(--off-white);
+  box-shadow: 0 16px 38px rgba(48, 53, 31, .22), inset 0 0 24px rgba(83, 90, 50, .05);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(22%) scale(.98);
+  transition: transform 1.05s cubic-bezier(.2, .8, .2, 1), opacity .55s ease, visibility .01s linear 1s;
+}
+
+#invitation-opening .card-inner {
+  display: flex;
+  height: calc(100% - 20px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin: 10px;
+  padding: clamp(10px, 2.2vh, 18px) clamp(10px, 2vw, 18px);
+  border: 1px solid rgba(197, 161, 91, .72);
+  text-align: center;
+}
+
+#invitation-opening .card-small {
+  margin: 0;
+  color: var(--deep-olive);
+  font-family: var(--sans);
+  font-size: clamp(8px, 1.8vw, 11px);
+  letter-spacing: .18em;
+}
+
+#invitation-opening .card-couple {
+  display: flex;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--deep-olive);
+  line-height: .9;
+}
+
+#invitation-opening .card-script {
+  max-width: 100%;
+  font-family: var(--script);
+  font-size: clamp(24px, 6vw, 42px);
+  line-height: 1.08;
+  white-space: nowrap;
+}
+
+#invitation-opening .card-and {
+  color: var(--champagne-gold);
+  font-family: var(--elegant);
+  font-size: clamp(17px, 3vw, 24px);
+  line-height: 1;
+}
+
+#invitation-opening .card-details {
+  display: grid;
+  width: 100%;
+  gap: 7px;
+  color: var(--deep-olive);
+}
+
+#invitation-opening .card-details p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  font-family: var(--elegant);
+  font-size: clamp(9px, 2vw, 12px);
+  line-height: 1.3;
+}
+
+#invitation-opening .card-details strong {
+  color: var(--olive-green);
+  font-family: var(--sans);
+  font-size: .75em;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+#invitation-opening .envelope-side {
+  position: absolute;
+  z-index: 3;
+  inset-block: 0;
+  width: 51%;
+  border: 1px solid rgba(197, 161, 91, .52);
+  background: linear-gradient(145deg, #535a32, #414526);
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  transition: transform .95s cubic-bezier(.2, .75, .2, 1), opacity .45s ease;
+}
+
+#invitation-opening .envelope-side--left {
+  left: 0;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  transform-origin: left center;
+}
+
+#invitation-opening .envelope-side--right {
+  right: 0;
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  transform-origin: right center;
+}
+
+#invitation-opening .envelope-bottom-flap {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  clip-path: polygon(0 100%, 50% 42%, 100% 100%);
+  background: linear-gradient(0deg, #414526, #535a32);
+  pointer-events: none;
+}
+
+#invitation-opening .envelope-front {
+  z-index: 5;
+  clip-path: polygon(0 42%, 50% 88%, 100% 42%, 100% 100%, 0 100%);
+  border: 0;
+  background: linear-gradient(145deg, #535a32, #414526);
+  box-shadow: inset 0 1px 0 rgba(197, 161, 91, .38), 0 8px 20px rgba(30, 34, 19, .16);
+}
+
+#invitation-opening .envelope-front::after {
+  z-index: 1;
+  background-position: center 64%;
+  background-size: 100% auto;
+  opacity: .54;
+}
+
+#invitation-opening .envelope-flap {
+  z-index: 6;
+  inset: 0;
+  height: 64%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border: 1px solid rgba(197, 161, 91, .5);
+  background: linear-gradient(145deg, #535a32, #414526);
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 5px 5px rgba(30, 34, 19, .18));
+  transition: transform .95s cubic-bezier(.2, .7, .2, 1), opacity .45s ease;
+}
+
+#invitation-opening .envelope-seal {
+  z-index: 7;
+  top: 58%;
+  width: 58px;
+  height: 58px;
+  border: 2px solid #d8bf7e;
+  background: radial-gradient(circle at 35% 28%, #fffff0, #f8f5ec 75%);
+  box-shadow: 0 6px 18px rgba(20, 24, 12, .34), inset 0 0 0 3px rgba(181, 154, 90, .18);
+  transition: transform .45s ease, opacity .35s ease;
+}
+
+#invitation-opening .envelope-seal img {
+  width: 31px;
+  height: 31px;
+  object-fit: contain;
+}
+
+#invitation-opening .envelope.is-opening .envelope-flap,
+#invitation-opening .envelope.is-open .envelope-flap {
+  transform: rotateX(180deg);
+  opacity: .24;
+}
+
+#invitation-opening .envelope.is-opening .envelope-card,
+#invitation-opening .envelope.is-open .envelope-card {
+  z-index: 2;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-28%) scale(1);
+  transition-delay: .16s, .16s, 0s;
+}
+
+#invitation-opening .envelope.is-opening .envelope-side--left,
+#invitation-opening .envelope.is-open .envelope-side--left {
+  transform: rotateY(78deg);
+}
+
+#invitation-opening .envelope.is-opening .envelope-side--right,
+#invitation-opening .envelope.is-open .envelope-side--right {
+  transform: rotateY(-78deg);
+}
+
+#invitation-opening .envelope.is-opening .envelope-front,
+#invitation-opening .envelope.is-open .envelope-front,
+#invitation-opening .envelope.is-opening .envelope-bottom-flap,
+#invitation-opening .envelope.is-open .envelope-bottom-flap {
+  opacity: .18;
+}
+
+#invitation-opening .envelope.is-opening .envelope-seal,
+#invitation-opening .envelope.is-open .envelope-seal {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(.72);
+}
+
+@media (max-width: 380px) {
+  #invitation-opening #weddingEnvelope {
+    width: min(88vw, 360px);
+    height: clamp(210px, 61vw, 240px);
+  }
+
+  #invitation-opening .card-inner {
+    margin: 8px;
+    height: calc(100% - 16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #invitation-opening .envelope-flap,
+  #invitation-opening .envelope-side,
+  #invitation-opening .envelope-card,
+  #invitation-opening .envelope-seal {
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
+  }
+}

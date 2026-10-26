@@ -1,0 +1,732 @@
+@media (max-width: 900px) {
+
+  section {
+    padding: 85px 0;
+  }
+
+  .story-grid {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .story-image {
+    max-width: 550px;
+    margin: auto;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .story-timeline {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    margin-top: 36px;
+    padding-left: 26px;
+  }
+
+  .story-timeline::before {
+    top: 24px;
+    bottom: 24px;
+    left: 26px;
+    right: auto;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(transparent, var(--champagne), transparent);
+  }
+
+  .story-moment {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 18px;
+    text-align: left;
+  }
+
+  .story-number {
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    margin: 0;
+  }
+
+  .story-moment__content {
+    padding: 5px 0 0;
+  }
+
+  .story-moment__content > p:last-child {
+    font-size: 17px;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .info-card {
+    padding: 26px 18px;
+  }
+
+  .modal-card h2 {
+    font-size: clamp(34px, 9vw, 46px);
+  }
+
+  .lightbox {
+    padding: 56px 16px 24px;
+  }
+
+  .lightbox-content {
+    margin-bottom: 56px;
+  }
+
+  #lightbox-image {
+    width: min(78vw, 560px);
+    max-height: 68dvh;
+    aspect-ratio: 4 / 5;
+  }
+
+  .lightbox-nav {
+    top: auto;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: 46px;
+    height: 46px;
+    transform: none;
+  }
+
+  .lightbox-nav:hover {
+    transform: scale(1.04);
+  }
+
+  .lightbox-previous { left: calc(50% - 56px); }
+  .lightbox-next { right: calc(50% - 56px); }
+
+  .floating-control {
+    right: 16px;
+    bottom: 16px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .opening-content {
+    width: min(96%, 1100px);
+    gap: 9px;
+  }
+
+  .opening-kicker {
+    font-size: 18px;
+  }
+
+  .opening-title {
+    font-size: clamp(13px, 3.8vw, 22px);
+    letter-spacing: .07em;
+    white-space: nowrap;
+  }
+
+  .opening-brand {
+    font-size: clamp(25px, 8vw, 32px);
+  }
+
+  .eagle-placeholder {
+    width: clamp(160px, 50vw, 240px);
+    height: auto;
+  }
+
+  .opening-card-stage {
+    width: 100%;
+    height: clamp(260px, 36vh, 340px);
+  }
+
+  .opening-florals {
+    width: 112%;
+    max-width: none;
+    height: 118%;
+  }
+
+  .envelope {
+    width: min(82vw, 390px);
+    aspect-ratio: 1.22 / 1;
+  }
+
+  .card-inner {
+    margin: 8px;
+    padding: 7px 10px;
+  }
+
+  .card-small {
+    font-size: 7px;
+    letter-spacing: .18em;
+  }
+
+  .card-details {
+    gap: 3px;
+  }
+
+  .card-details p {
+    font-size: clamp(7px, 1.8vw, 8px);
+    line-height: 1.12;
+  }
+
+  .envelope-seal {
+    width: 44px;
+    height: 44px;
+    font-size: 10px;
+  }
+
+  .envelope-seal span:nth-child(2) {
+    font-size: 7px;
+  }
+
+  .open-button {
+    min-width: 220px;
+    min-height: 52px;
+  }
+
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero-overlay {
+    inset: 12px;
+  }
+
+  .hero-names {
+    font-size: clamp(70px, 22vw, 120px);
+  }
+
+  .hero-date {
+    gap: 10px;
+  }
+
+  .countdown-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .countdown-item {
+    padding: 25px 10px;
+  }
+
+  .countdown-item strong {
+    font-size: clamp(42px, 12vw, 64px);
+  }
+
+  .countdown-item span {
+    font-size: 8px;
+    letter-spacing: .18em;
+  }
+
+  .event-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .event-card {
+    padding: 42px 22px 38px;
+  }
+
+  .location-button {
+    width: min(100%, 320px);
+  }
+
+  .timeline::before {
+    left: 12px;
+  }
+
+  .timeline-item {
+    grid-template-columns: 24px minmax(0, 1fr);
+    align-items: stretch;
+    min-height: 0;
+    padding: 10px 0 18px;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-content,
+  .timeline-item:nth-child(even) .timeline-content {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: stretch;
+    width: auto;
+    padding: 19px 18px;
+  }
+
+  .timeline-dot {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+    margin-top: 10px;
+  }
+
+  .dress-swatches {
+    gap: 18px 12px;
+  }
+
+  .dress-swatches--primary,
+  .dress-swatches--complementary {
+    grid-template-columns: repeat(1, minmax(110px, 145px));
+    width: auto;
+    max-width: 145px;
+  }
+
+  .dress-swatch__color {
+    width: 56px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .gallery-item:nth-child(even) {
+    transform: translateY(20px);
+  }
+
+  .gallery-item:nth-child(even):hover {
+    transform: translateY(15px);
+  }
+
+  .footer h2 {
+    font-size: 52px;
+  }
+
+  .modal-card {
+    padding: 40px 25px;
+  }
+
+}
+
+@media (max-height: 650px) and (orientation: landscape) {
+
+  .opening-screen {
+    overflow-y: auto;
+  }
+
+  .opening-content {
+    gap: 6px;
+    padding-block: 12px;
+  }
+
+  .opening-rule {
+    margin: 15px auto 20px;
+  }
+
+  .envelope {
+    width: min(55vw, 330px);
+    aspect-ratio: 1.22 / 1;
+  }
+
+  .opening-card-stage {
+    height: clamp(250px, 42vh, 300px);
+  }
+
+  .opening-hint {
+    margin-top: 10px;
+  }
+}
+
+
+
+@media (max-height: 650px) and (orientation: landscape) {
+  #envelope,
+  #envelope.is-opening,
+  #envelope.is-open,
+  #envelope.is-revealed {
+    width: min(54vw, 700px);
+  }
+}
+
+
+
+
+@media (max-width: 420px) {
+
+  .opening-title {
+    min-width: 0;
+    font-size: clamp(10px, 3.6vw, 14px);
+    letter-spacing: .02em;
+  }
+
+  .card-inner {
+    margin: 8px;
+  }
+
+  .card-small {
+    font-size: 7px;
+    letter-spacing: .2em;
+    margin-bottom: 8px;
+  }
+
+  .card-script {
+    font-size: clamp(16px, 5.4vw, 23px);
+  }
+
+  .card-and {
+    font-size: 17px;
+  }
+
+  .card-details p {
+    font-size: clamp(7.5px, 2.2vw, 8.5px);
+  }
+
+  .card-details strong {
+    letter-spacing: .14em;
+  }
+
+  section {
+    padding: 70px 0;
+  }
+
+  .hero-names {
+    font-size: 70px;
+  }
+
+  .hero-date strong {
+    font-size: 40px;
+  }
+
+  .story-section .section-heading h2 {
+    font-size: 38px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rsvp-section .container {
+    padding: 28px 18px;
+  }
+
+  .modal {
+    padding: 12px;
+  }
+
+  .modal-card {
+    padding: 36px 20px 24px;
+  }
+
+  .calendar {
+    width: 100%;
+    padding: 16px 12px;
+  }
+
+  .calendar-days {
+    gap: 3px;
+  }
+
+  .calendar-days span {
+    font-size: 13px;
+  }
+
+  .calendar-weekdays {
+    gap: 1px;
+    font-size: 8px;
+    letter-spacing: 0;
+  }
+
+  .calendar-google-button {
+    width: min(100%, 340px);
+    padding-inline: 14px;
+    font-size: 9px;
+  }
+
+  .replay-invitation {
+    width: min(100%, 280px);
+    margin-top: 18px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item,
+  .gallery-item:nth-child(even) {
+    aspect-ratio: 4 / 5;
+    transform: none;
+  }
+
+  .gallery-item:hover,
+  .gallery-item:nth-child(even):hover {
+    transform: none;
+  }
+
+}
+
+@media (max-width: 700px) {
+  .opening-content {
+    min-width: 0;
+    width: min(100%, 480px);
+    padding-inline: 12px;
+  }
+
+  .opening-title {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .opening-card-stage {
+    width: 100%;
+    min-width: 0;
+    height: clamp(330px, 42vh, 370px);
+  }
+
+  .envelope {
+    width: min(92vw, 560px);
+    height: clamp(270px, 36vh, 330px);
+    max-width: 100%;
+    aspect-ratio: auto;
+  }
+
+  .envelope-card {
+    height: 88%;
+    top: 3%;
+  }
+
+  .card-inner {
+    justify-content: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 8px 10px;
+  }
+
+  .card-couple {
+    flex-wrap: nowrap;
+    gap: .12em;
+  }
+
+  .card-script {
+    font-size: clamp(17px, 5.5vw, 23px);
+  }
+
+  .card-details {
+    gap: 5px;
+  }
+
+  .card-details p {
+    font-size: clamp(8px, 2.15vw, 9px);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .envelope.is-revealed .envelope-card {
+    width: 76%;
+    min-height: 600px;
+    margin-bottom: 0;
+  }
+
+  .envelope.is-revealed .card-inner {
+    min-height: 570px;
+    padding: 24px 16px;
+  }
+
+  .envelope.is-revealed .card-script {
+    font-size: clamp(38px, 11vw, 58px);
+  }
+
+  .envelope.is-revealed .card-details p {
+    font-size: clamp(12px, 3.5vw, 15px);
+    line-height: 1.4;
+  }
+
+  .envelope.is-revealed .envelope-back,
+  .envelope.is-revealed .envelope-side {
+    height: 100%;
+  }
+
+  .envelope.is-revealed .envelope-side {
+    width: 12%;
+    top: 0;
+    bottom: 0;
+  }
+
+  .opening-screen.card-revealed .opening-content {
+    min-height: 100svh;
+    height: auto;
+  }
+
+  .opening-screen.card-revealed .open-button {
+    width: min(100%, 340px);
+    min-width: 0;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 768px) and (max-height: 680px) {
+  .opening-content {
+    gap: 5px;
+    padding-block: 14px;
+  }
+
+  .eagle-placeholder {
+    width: clamp(145px, 40vw, 220px);
+    height: auto;
+  }
+
+  .opening-card-stage {
+    height: clamp(250px, 42vh, 300px);
+  }
+
+  .opening-hint {
+    margin-top: 4px;
+  }
+}
+
+/* Portrait envelope proportions used by the reference opening video. */
+@media (max-width: 700px) {
+  .opening-content {
+    width: 100%;
+    min-height: 100svh;
+    gap: 10px;
+    padding: 14px 8px 18px;
+  }
+
+  .opening-card-stage {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 6px 0 12px;
+  }
+
+  .envelope {
+    width: min(78vw, 390px);
+    height: min(68svh, 660px);
+    min-height: 440px;
+    aspect-ratio: auto;
+  }
+
+  .envelope-front-content {
+    inset: 6% 5% auto;
+    height: 22%;
+  }
+
+  .envelope-front-content .opening-brand {
+    font-size: clamp(19px, 6vw, 25px);
+  }
+
+  .envelope-front-content .opening-title {
+    font-size: clamp(8px, 2.7vw, 11px);
+    letter-spacing: .13em;
+  }
+
+  .envelope-seal {
+    width: clamp(100px, 34vw, 132px);
+    height: clamp(84px, 28vw, 108px);
+  }
+
+  .envelope.is-revealed {
+    width: 100vw;
+    min-height: 78svh;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .envelope.is-revealed .envelope-card {
+    width: 100%;
+    min-height: 78svh;
+  }
+
+  .envelope.is-revealed .card-inner {
+    min-height: calc(78svh - 24px);
+    margin: 8px;
+    padding: 24px 15px;
+    gap: 12px;
+  }
+
+  .envelope.is-revealed .card-script {
+    font-size: clamp(36px, 10vw, 56px);
+  }
+
+  .envelope.is-revealed .card-details {
+    gap: 9px;
+  }
+
+  .envelope.is-revealed .card-details p {
+    font-size: clamp(12px, 3.6vw, 15px);
+    line-height: 1.35;
+  }
+
+  .opening-screen.card-revealed .opening-content {
+    width: 100%;
+    min-height: 100svh;
+    height: auto;
+    gap: 8px;
+    padding: 8px 0 18px;
+  }
+
+  .opening-screen.card-revealed .opening-card-stage {
+    width: 100%;
+    padding: 0 0 14px;
+  }
+
+  .opening-screen.card-revealed .open-button {
+    width: min(calc(100% - 32px), 340px);
+    margin: 0 auto;
+  }
+
+  .opening-screen.card-revealed .opening-hint {
+    padding-inline: 12px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-height: 650px) and (orientation: landscape) {
+  .envelope {
+    height: 66svh;
+    min-height: 300px;
+    width: min(48vw, 280px);
+  }
+
+  .envelope.is-revealed,
+  .envelope.is-revealed .envelope-card {
+    min-height: 90svh;
+  }
+}
+
+
+
+/* Responsive folio composition sizing. */
+@media (max-width: 700px) {
+  .opening-content,
+  .opening-screen.card-revealed .opening-content {
+    width: 100%;
+    min-height: 100svh;
+    height: auto;
+    gap: 8px;
+    padding: 10px 0 16px;
+  }
+
+  .opening-card-stage,
+  .opening-screen.card-revealed .opening-card-stage {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  #envelope,
+  #envelope.is-opening,
+  #envelope.is-open,
+  #envelope.is-revealed {
+    width: min(94vw, 820px, calc(78svh * 1025 / 1280));
+    aspect-ratio: 1025 / 1280;
+    margin-inline: auto;
+  }
+
+  .folio-content {
+    padding: 5% 5% 3%;
+  }
+}
+
+@media (max-height: 650px) and (orientation: landscape) {
+  #envelope,
+  #envelope.is-opening,
+  #envelope.is-open,
+  #envelope.is-revealed {
+    width: min(54vw, 700px);
+  }
+}

@@ -1,0 +1,494 @@
+/* =====================================================
+   OPENING
+===================================================== */
+
+.reveal-opening {
+  animation: openingReveal .8s ease both;
+}
+
+.opening-brand { animation-delay: .3s; }
+.eagle-placeholder {
+  animation:
+    openingEagleEnter .95s cubic-bezier(.2,.7,.2,1) .7s both,
+    openingEagleFloat 7s ease-in-out 1.65s infinite;
+}
+
+.opening-title {
+  animation-delay: 1.1s;
+}
+
+.envelope {
+  animation:
+    openingCardEnter .7s cubic-bezier(.2,.8,.2,1) 1.5s both,
+    envelopeFloat 4s ease-in-out 2.2s infinite;
+}
+
+.envelope-card {
+  animation: invitationPaperRise .85s cubic-bezier(.2,.8,.2,1) 1.8s both;
+}
+
+.card-inner {
+  animation: invitationDetailsReveal .65s ease 2.4s both;
+}
+
+.envelope-flap {
+  animation: openingFlapPreview 1.1s cubic-bezier(.2,.7,.2,1) 2.05s both;
+}
+
+.opening-ornament { animation-delay: 1.25s; }
+
+.opening-florals {
+  animation: openingFloralsEnter .9s ease 1.3s both;
+}
+
+@keyframes openingEagleFloat {
+  0%,
+  100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.012); }
+}
+
+@keyframes openingEagleEnter {
+  from { opacity: .45; transform: translateY(-16px) scale(.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes openingFloralsEnter {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.open-button {
+  animation: openingButtonEnter .55s ease 3.2s both;
+}
+
+@keyframes openingCardEnter {
+  from { opacity: 0; transform: translateY(22px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes openingButtonEnter {
+  0% { opacity: 0; visibility: hidden; transform: translateY(8px); }
+  1% { visibility: visible; }
+  100% { opacity: 1; visibility: visible; transform: translateY(0); }
+}
+
+@keyframes invitationPaperRise {
+  from { opacity: .72; transform: translateY(8%) scale(.985); }
+  to { opacity: 1; transform: translateY(-12%) scale(1); }
+}
+
+@keyframes invitationDetailsReveal {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes openingFlapPreview {
+  0%,
+  100% { transform: rotateX(0); }
+  52% { transform: rotateX(178deg); }
+}
+
+@keyframes openingReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes envelopeFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+.envelope.is-open,
+.envelope.is-open:hover {
+  animation: none;
+}
+
+.opening-screen.is-closing {
+  animation: openingExit 1.15s cubic-bezier(.7,0,.3,1) forwards;
+  pointer-events: auto;
+}
+
+@keyframes openingExit {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  55% {
+    opacity: .96;
+    transform: scale(1.01);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.025);
+    visibility: hidden;
+  }
+}
+
+.opening-screen.is-returning {
+  animation: openingReturn .75s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes openingReturn {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.invitation.is-replaying {
+  animation: invitationReplayOut .55s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes invitationReplayOut {
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.envelope.is-resetting .envelope-card,
+.envelope.is-resetting .envelope-flap,
+.envelope.is-resetting .envelope-seal {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendar-section .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none !important;
+  }
+
+  .details .event-card.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none !important;
+  }
+
+  .timeline-section .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none !important;
+  }
+
+  .timeline-item.visible .timeline-dot {
+    animation: none !important;
+  }
+
+  .reveal-opening,
+  .eagle-placeholder,
+  .opening-brand,
+  .opening-florals,
+  .opening-eagle,
+  .opening-ornament,
+  .opening-content,
+  .envelope,
+  .envelope-card,
+  .card-inner,
+  .envelope-flap,
+  .envelope-seal,
+  .open-button {
+    animation-duration: .01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: .01ms !important;
+  }
+
+  .envelope { animation: none !important; }
+
+  .eagle-placeholder,
+  .opening-florals {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  .envelope-card,
+  .card-inner,
+  .envelope-flap {
+    opacity: 1;
+    transform: none;
+  }
+
+  .eagle-placeholder { transform: none; }
+  .opening-florals { transform: translateX(-50%); }
+
+  .opening-screen.is-closing {
+    animation-duration: .01ms !important;
+  }
+
+  .opening-screen.is-returning,
+  .invitation.is-replaying {
+    animation-duration: .01ms !important;
+  }
+
+  .replay-invitation {
+    transition-duration: .01ms !important;
+  }
+
+  .music-control .music-note {
+    animation: none !important;
+  }
+}
+
+/* Opening sequence is interaction-led: keep the envelope closed until activated. */
+.opening-brand,
+.opening-title,
+.opening-ornament,
+.eagle-placeholder,
+.envelope-flap,
+.envelope-card,
+.card-inner,
+.open-button {
+  animation: none;
+}
+
+.envelope {
+  animation: openingCardEnter .8s cubic-bezier(.2,.8,.2,1) .25s both;
+}
+
+.envelope.is-opening,
+.envelope.is-open,
+.envelope.is-revealed {
+  animation: none;
+}
+
+.envelope.is-opening .envelope-flap {
+  transition-delay: .12s;
+}
+
+.envelope.is-opening .envelope-side--left,
+.envelope.is-opening .envelope-side--right {
+  transition-delay: .35s;
+}
+
+.envelope.is-opening .envelope-card {
+  transition-delay: .48s, .32s, 0s;
+}
+
+.opening-screen.card-revealed .opening-brand,
+.opening-screen.card-revealed .opening-title,
+.opening-screen.card-revealed .eagle-placeholder {
+  animation: openingReveal .4s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .envelope,
+  .envelope-flap,
+  .envelope-bottom-flap,
+  .envelope-side,
+  .envelope-card,
+  .envelope-front-content,
+  .envelope-seal,
+  .open-button {
+    animation: none !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* =====================================================
+   SCROLL REVEALS
+===================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity .8s ease,
+    transform .8s cubic-bezier(.2,.8,.2,1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* =====================================================
+   COUNTDOWN
+===================================================== */
+
+.countdown-item strong.tick {
+  animation: numberTick .35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .countdown-item strong.tick {
+    animation: none !important;
+  }
+}
+
+@keyframes numberTick {
+  0% {
+    opacity: .35;
+    transform: translateY(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =====================================================
+   MUSIC
+===================================================== */
+
+@keyframes musicPulse {
+  0%, 100% { transform: rotate(-4deg) scale(1); }
+  50% { transform: rotate(4deg) scale(1.06); }
+}
+
+.music-control.is-playing .music-note {
+  animation: musicPulse 1.8s ease-in-out infinite;
+  transform-origin: center;
+}
+
+
+/* =====================================================
+   TIMELINE
+===================================================== */
+
+.timeline-item.visible .timeline-dot {
+  animation: dotPop .6s cubic-bezier(.2,1.5,.4,1);
+}
+
+@keyframes dotPop {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+
+/* =====================================================
+   GALLERY
+===================================================== */
+
+.gallery-item {
+  transition:
+    transform .5s cubic-bezier(.2,.8,.2,1),
+    filter .5s ease;
+}
+
+.gallery-item.reveal {
+  transition:
+    opacity .7s ease,
+    transform .5s cubic-bezier(.2,.8,.2,1),
+    filter .5s ease;
+}
+
+.gallery-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    transparent 40%,
+    rgba(79,87,44,.6)
+  );
+  opacity: .6;
+  transition: opacity .4s ease;
+}
+
+.gallery-item:hover::after {
+  opacity: .9;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal:not(.hidden) .modal-card {
+  animation: modalIn .45s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =====================================================
+   LIGHTBOX
+===================================================== */
+
+.lightbox:not(.hidden) #lightbox-placeholder {
+  animation: lightboxIn .5s ease;
+}
+
+@keyframes lightboxIn {
+  from {
+    opacity: 0;
+    transform: scale(.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .dress-swatch__color,
+  .info-card,
+  .gallery-item,
+  .gallery-item::after,
+  .lightbox-nav,
+  .success-icon {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .gallery-item,
+  .gallery-item:nth-child(even),
+  .gallery-item:hover,
+  .gallery-item:nth-child(even):hover,
+  .info-card:hover {
+    transform: none !important;
+  }
+
+  .timeline-item.visible .timeline-dot,
+  .modal:not(.hidden) .modal-card,
+  .lightbox:not(.hidden) #lightbox-placeholder {
+    animation: none !important;
+  }
+}
