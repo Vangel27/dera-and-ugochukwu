@@ -7,11 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const openingScreen = document.getElementById("envelope-screen");
   const envelope = document.getElementById("envelopeBox");
   const openInvitationButton = document.getElementById("openInvitation");
+  const openingCountdown = document.getElementById("countdown-display");
+  const openingCountdownNumber = document.getElementById("timer-number");
   const envelopePass = document.getElementById("envelopePass");
   const heroSection = document.getElementById("heroSection");
   const invitation = document.getElementById("invitation");
 
   const replayButton = document.getElementById("replay-invitation");
+  const copyAccountNumberButton = document.getElementById("copy-account-number");
+  const viewWeddingAlbumButton = document.getElementById("view-wedding-album");
+  const guestAlbumModal = document.getElementById("guest-album-modal");
+  const guestAlbumGrid = document.getElementById("guest-album-grid");
+  const guestAlbumEmpty = document.getElementById("guest-album-empty");
 
   const music = document.getElementById("weddingMusic");
   const musicToggle = document.getElementById("musicToggle");
@@ -23,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const bankDetailsCard = document.getElementById("bank-details-card");
   const guestPhotoInput = document.getElementById("guest-photo-input");
   const guestPhotoStatus = document.getElementById("guest-photo-status");
-  const galleryGrid = document.querySelector(".gallery-grid");
 
   const rsvpButton = document.getElementById("rsvp-button");
   const rsvpModal = document.getElementById("rsvp-modal");
@@ -49,26 +55,57 @@ document.addEventListener("DOMContentLoaded", () => {
   let openingTransitioning = false;
   let invitationOpened = false;
   let replayInProgress = false;
+  let cardRevealTimeout = null;
+  let sealTimer = null;
+  let sealSecondsRemaining = 3;
   const reduceOpeningMotion = window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document.body.style.overflow = "hidden";
 
+  function clearSealTimer() {
+    if (sealTimer === null) return;
+    window.clearInterval(sealTimer);
+    sealTimer = null;
+  }
+
+  function startSealTimer() {
+    clearSealTimer();
+    sealSecondsRemaining = 3;
+    if (openingCountdownNumber) openingCountdownNumber.textContent = String(sealSecondsRemaining);
+    if (openingCountdown) openingCountdown.hidden = false;
+
+    sealTimer = window.setInterval(() => {
+      sealSecondsRemaining -= 1;
+      if (openingCountdownNumber) openingCountdownNumber.textContent = String(sealSecondsRemaining);
+      if (sealSecondsRemaining <= 0) {
+        clearSealTimer();
+        openEnvelope();
+      }
+    }, 1000);
+  }
+
   function openEnvelope() {
+    clearSealTimer();
+    if (openingCountdown) openingCountdown.hidden = true;
     if (openingTransitioning || invitationOpened || !openingScreen || !envelope || !openInvitationButton) return;
     if (envelope.classList.contains("opened")) return;
     openingTransitioning = true;
     openInvitationButton.disabled = true;
-    startMusicFromOpening();
     envelope.classList.add("opened");
 
-    window.setTimeout(() => {
+    cardRevealTimeout = window.setTimeout(() => {
+      envelope.classList.add("card-emerging");
+      cardRevealTimeout = null;
       openingTransitioning = false;
-    }, reduceOpeningMotion ? 20 : 850);
+    }, reduceOpeningMotion ? 20 : 820);
   }
 
   function enterWebsite() {
     if (invitationOpened || !openingScreen || !invitation || !envelope || !envelope.classList.contains("opened")) return;
+    // This transition runs from the guest's button click, allowing playback
+    // under browser user-gesture policies.
+    if (music && music.paused) startMusicFromOpening();
     invitationOpened = true;
     openingTransitioning = true;
     openingScreen.classList.add("is-leaving");
@@ -92,15 +129,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }, reduceOpeningMotion ? 20 : 700);
   }
 
-  if (envelope) envelope.addEventListener("click", openEnvelope);
+  if (openInvitationButton) openInvitationButton.addEventListener("click", openEnvelope);
   if (envelopePass) {
     envelopePass.addEventListener("click", (event) => {
       event.stopPropagation();
-      if (!event.target.closest(".open-pass-btn")) return;
-      if (!envelope || !envelope.classList.contains("opened")) return;
+      const openPassButton = event.target.closest(".open-pass-btn");
+      if (!openPassButton) return;
+      if (!envelope || !envelope.classList.contains("card-emerging")) return;
+      if (invitationOpened) return;
       enterWebsite();
     });
   }
+
+  startSealTimer();
 
   function replayEnvelopeOpening() {
     if (openingTransitioning || replayInProgress) return;
@@ -108,6 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (replayButton) replayButton.disabled = true;
 
     const resetOpening = () => {
+      const openPassButton = envelopePass && envelopePass.querySelector(".open-pass-btn");
+      if (openPassButton) {
+        openPassButton.disabled = false;
+      }
       if (invitation) {
         invitation.classList.remove("is-entering", "is-replaying");
         invitation.classList.add("hidden");
@@ -116,7 +161,12 @@ document.addEventListener("DOMContentLoaded", () => {
         openingScreen.hidden = false;
         openingScreen.classList.remove("is-leaving", "hidden");
       }
-      if (envelope) envelope.classList.remove("opened");
+      if (cardRevealTimeout) {
+        window.clearTimeout(cardRevealTimeout);
+        cardRevealTimeout = null;
+      }
+      clearSealTimer();
+      if (envelope) envelope.classList.remove("opened", "card-emerging");
       if (heroSection) heroSection.style.display = "none";
       if (openInvitationButton) openInvitationButton.disabled = false;
       invitationOpened = false;
@@ -126,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.style.overflow = "hidden";
       window.scrollTo(0, 0);
       if (openInvitationButton) openInvitationButton.focus({ preventScroll: true });
+      startSealTimer();
     };
 
     if (invitationOpened && invitation) {
@@ -235,8 +286,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const musicSource = music && music.querySelector("source");
   let musicAvailable = false;
   let musicFailed = false;
+  let musicPlayPending = false;
   if (music) {
     music.loop = true;
+    music.volume = 0.6;
     music.preload = "metadata";
   }
 
@@ -285,22 +338,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startMusicFromOpening() {
-    if (!music || !musicSource || musicFailed) return;
+    if (!music || !musicSource || musicFailed || !music.paused || musicPlayPending) return;
 
     try {
       const playRequest = music.play();
 
-      if (playRequest && typeof playRequest.catch === "function") {
-        playRequest.catch(syncMusicControl);
+      if (playRequest && typeof playRequest.then === "function") {
+        musicPlayPending = true;
+        playRequest.then(() => {
+          musicPlayPending = false;
+        }).catch(() => {
+          musicPlayPending = false;
+          syncMusicControl();
+        });
       }
     } catch {
+      musicPlayPending = false;
       syncMusicControl();
     }
   }
 
   if (music) {
     music.addEventListener("canplay", showMusicControl);
-    music.addEventListener("playing", showMusicControl);
+    music.addEventListener("playing", () => {
+      musicPlayPending = false;
+      showMusicControl();
+    });
     music.addEventListener("play", syncMusicControl);
     music.addEventListener("pause", syncMusicControl);
     music.addEventListener("ended", syncMusicControl);
@@ -402,6 +465,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  if (copyAccountNumberButton) {
+    copyAccountNumberButton.addEventListener("click", async () => {
+      const accountNumber = "2047934030";
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(accountNumber);
+        } else {
+          throw new Error("Clipboard API unavailable in this context.");
+        }
+      } catch {
+        const temporaryField = document.createElement("textarea");
+        temporaryField.value = accountNumber;
+        temporaryField.setAttribute("readonly", "");
+        temporaryField.style.position = "fixed";
+        temporaryField.style.opacity = "0";
+        document.body.append(temporaryField);
+        temporaryField.select();
+        const copied = document.execCommand("copy");
+        temporaryField.remove();
+        if (!copied) {
+          showToast("Could not copy the account number.");
+          return;
+        }
+      }
+
+      showToast("Copied!");
+    });
+  }
+
+  if (viewWeddingAlbumButton && guestAlbumModal) {
+    viewWeddingAlbumButton.addEventListener("click", event => {
+      event.preventDefault();
+      openLayer(guestAlbumModal, viewWeddingAlbumButton);
+      fetchCloudinaryGallery();
+    });
+  }
+
   if (rsvpButton && rsvpModal) {
     rsvpButton.addEventListener("click", () => openLayer(rsvpModal, rsvpButton));
   }
@@ -412,6 +513,16 @@ document.addEventListener("DOMContentLoaded", () => {
       closeLayer(layer);
     });
   });
+
+  const rsvpPresetMessages = document.getElementById("preset-messages");
+  const rsvpMessageField = document.getElementById("rsvp-message");
+  if (rsvpPresetMessages && rsvpMessageField) {
+    rsvpPresetMessages.addEventListener("change", () => {
+      if (rsvpPresetMessages.value) {
+        rsvpMessageField.value = rsvpPresetMessages.value;
+      }
+    });
+  }
 
   if (rsvpForm && rsvpModal && rsvpSuccess) {
     const rsvpNameField = document.getElementById("rsvp-name");
@@ -518,72 +629,225 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  if (guestPhotoInput && galleryGrid) {
-    guestPhotoInput.addEventListener("change", event => {
-      const files = Array.from(event.target.files || []);
-      let added = 0;
-      let skipped = 0;
+  const cloudinaryName = "pbz0jtv4";
+  const cloudinaryUploadPreset = "o1bjynky";
+  const cloudinaryAlbumTag = "dera-ugochukwu-guest-album";
+  const guestAlbumStorageKey = "dera_ugochukwu_global_album";
+  const hiddenAlbumPhotosStorageKey = "dera_ugochukwu_hidden_album_photos";
 
-      files.forEach(file => {
-        if (!file.type.startsWith("image/") || file.size > 20 * 1024 * 1024) {
-          skipped += 1;
-          return;
-        }
+  function getPhotoPublicIdFromUrl(url) {
+    try {
+      const pathname = new URL(url).pathname;
+      const uploadMarker = "/image/upload/";
+      const uploadIndex = pathname.indexOf(uploadMarker);
+      if (uploadIndex < 0) return url;
+      let publicId = pathname.slice(uploadIndex + uploadMarker.length);
+      publicId = publicId.replace(/^v\d+\//, "").replace(/\.[^/.]+$/, "");
+      return decodeURIComponent(publicId);
+    } catch {
+      return url;
+    }
+  }
 
-        const previewUrl = URL.createObjectURL(file);
-        const galleryItem = document.createElement("button");
-        galleryItem.type = "button";
-        galleryItem.className = "gallery-item guest-uploaded-photo";
-        galleryItem.dataset.caption = "Guest photo";
-        galleryItem.setAttribute("aria-label", "Open guest photo in wedding gallery");
-        galleryItem.setAttribute("aria-haspopup", "dialog");
-        galleryItem.setAttribute("aria-controls", "gallery-lightbox");
+  function getHiddenAlbumPhotoIds() {
+    try {
+      const storedIds = JSON.parse(localStorage.getItem(hiddenAlbumPhotosStorageKey) || "[]");
+      return new Set(Array.isArray(storedIds) ? storedIds.filter(id => typeof id === "string") : []);
+    } catch {
+      return new Set();
+    }
+  }
 
-        const image = document.createElement("img");
-        image.src = previewUrl;
-        image.alt = "Guest-uploaded wedding moment";
-        image.loading = "lazy";
-        image.decoding = "async";
+  function getStoredGuestPhotos() {
+    try {
+      const savedPhotos = JSON.parse(localStorage.getItem(guestAlbumStorageKey) || "[]");
+      return Array.isArray(savedPhotos)
+        ? savedPhotos.filter(photo => typeof photo === "string" && photo.startsWith("https://"))
+        : [];
+    } catch (error) {
+      console.warn("Saved guest album could not be read.", error);
+      return [];
+    }
+  }
 
-        const caption = document.createElement("span");
-        caption.textContent = "Guest Photo";
-        galleryItem.append(image, caption);
-        galleryGrid.prepend(galleryItem);
-        galleryItems.push(galleryItem);
+  function renderGuestAlbum(photoUrls) {
+    if (!guestAlbumGrid) return;
+    const hiddenPhotoIds = getHiddenAlbumPhotoIds();
+    const normalizedPhotos = photoUrls.map(photo => typeof photo === "string"
+      ? { url: photo, publicId: getPhotoPublicIdFromUrl(photo) }
+      : photo
+    ).filter(photo => photo && typeof photo.url === "string" && photo.url.startsWith("https://"));
+    const uniquePhotos = Array.from(new Map(
+      normalizedPhotos.map(photo => [photo.publicId || photo.url, photo])
+    ).values());
+    const photos = uniquePhotos.filter(photo => !hiddenPhotoIds.has(photo.publicId || photo.url));
+    guestAlbumGrid.replaceChildren();
 
-        galleryItem.addEventListener("click", () => {
-          const photoIndex = galleryItems.indexOf(galleryItem);
-          if (photoIndex < 0) return;
-          showGalleryItem(photoIndex);
-          openLayer(galleryLightbox, galleryItem);
-        });
+    photos.forEach((photo, index) => {
+      const item = document.createElement("figure");
+      item.className = "guest-album-photo";
+      item.dataset.publicId = photo.publicId || photo.url;
 
-        added += 1;
-      });
+      const image = document.createElement("img");
+      image.src = photo.url;
+      image.alt = `Guest-uploaded wedding photo ${index + 1}`;
+      image.loading = "lazy";
+      image.decoding = "async";
 
+      const caption = document.createElement("figcaption");
+      caption.textContent = "Guest Photo";
+
+      const actions = document.createElement("div");
+      actions.className = "guest-album-photo-actions";
+      const downloadLink = document.createElement("a");
+      downloadLink.className = "btn-download";
+      downloadLink.href = photo.url.replace("/image/upload/", "/image/upload/fl_attachment/");
+      downloadLink.download = `Dera-Ugochukwu-Wedding-Guest-${index + 1}.jpg`;
+      downloadLink.textContent = "Download Photo";
+      downloadLink.setAttribute("aria-label", `Download guest wedding photo ${index + 1}`);
+      downloadLink.target = "_blank";
+      downloadLink.rel = "noopener noreferrer";
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "delete-btn";
+      deleteButton.textContent = "Delete Photo";
+      deleteButton.setAttribute("aria-label", `Remove guest wedding photo ${index + 1} from this browser's album view`);
+      actions.append(downloadLink, deleteButton);
+
+      item.append(image, caption, actions);
+      guestAlbumGrid.appendChild(item);
+    });
+
+    if (guestAlbumEmpty) guestAlbumEmpty.hidden = photos.length > 0;
+  }
+
+  async function fetchCloudinaryGallery() {
+    if (!guestAlbumGrid) return;
+
+    try {
+      const listingUrl = `https://res.cloudinary.com/${cloudinaryName}/image/list/${cloudinaryAlbumTag}.json`;
+      const response = await fetch(`${listingUrl}?_=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Cloudinary album listing returned ${response.status}.`);
+
+      const listing = await response.json();
+      const remotePhotos = Array.isArray(listing.resources)
+        ? listing.resources
+          .filter(resource => resource && resource.public_id && resource.format)
+          .map(resource => {
+            const version = resource.version ? `v${resource.version}/` : "";
+            return {
+              url: `https://res.cloudinary.com/${cloudinaryName}/image/upload/${version}${resource.public_id}.${resource.format}`,
+              publicId: resource.public_id
+            };
+          })
+        : [];
+
+      renderGuestAlbum([...remotePhotos, ...getStoredGuestPhotos()]);
+      if (guestAlbumModal && !guestAlbumModal.classList.contains("hidden") && guestPhotoStatus) {
+        guestPhotoStatus.textContent = "Shared Cloudinary album refreshed.";
+      }
+    } catch (error) {
+      console.warn("Cloudinary's public album listing is unavailable; showing this browser's saved uploads.", error);
+      renderGuestAlbum(getStoredGuestPhotos());
       if (guestPhotoStatus) {
-        if (added && skipped) {
-          guestPhotoStatus.textContent = `${added} photo${added === 1 ? "" : "s"} added to the gallery preview. ${skipped} unsupported or over-20 MB file${skipped === 1 ? " was" : "s were"} skipped.`;
-        } else if (added) {
-          guestPhotoStatus.textContent = `${added} photo${added === 1 ? "" : "s"} added to the gallery preview on this device.`;
-        } else if (skipped) {
-          guestPhotoStatus.textContent = "Choose image files smaller than 20 MB to preview them in the gallery.";
-        } else {
-          guestPhotoStatus.textContent = "No photos selected.";
+        guestPhotoStatus.textContent = "The shared album is temporarily unavailable. You can still upload a photo, and the album will refresh when it is reachable.";
+      }
+    }
+  }
+
+  async function uploadGuestPhoto(file) {
+    if (!file.type.startsWith("image/") || file.size > 20 * 1024 * 1024) {
+      throw new Error("Choose an image smaller than 20 MB.");
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", cloudinaryUploadPreset);
+    formData.append("tags", cloudinaryAlbumTag);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudinaryName}/image/upload`,
+      { method: "POST", body: formData }
+    );
+    const result = await response.json();
+    if (!response.ok || !result.secure_url) {
+      throw new Error(result.error?.message || "Cloudinary could not upload this photo.");
+    }
+
+    const savedPhotos = getStoredGuestPhotos();
+    if (!savedPhotos.includes(result.secure_url)) {
+      savedPhotos.unshift(result.secure_url);
+      try {
+        localStorage.setItem(guestAlbumStorageKey, JSON.stringify(savedPhotos));
+      } catch (error) {
+        console.warn("The Cloudinary upload succeeded, but its URL could not be saved in this browser.", error);
+      }
+    }
+    renderGuestAlbum([
+      { url: result.secure_url, publicId: result.public_id || getPhotoPublicIdFromUrl(result.secure_url) },
+      ...savedPhotos
+    ]);
+  }
+
+  if (guestAlbumGrid) {
+    guestAlbumGrid.addEventListener("click", event => {
+      const deleteButton = event.target.closest(".delete-btn");
+      if (!deleteButton) return;
+
+      const photoCard = deleteButton.closest(".guest-album-photo");
+      const publicId = photoCard && photoCard.dataset.publicId;
+      if (!publicId || !window.confirm("Remove this photo from this browser's album view? The Cloudinary original will remain in shared storage.")) return;
+
+      const hiddenPhotoIds = getHiddenAlbumPhotoIds();
+      hiddenPhotoIds.add(publicId);
+      try {
+        localStorage.setItem(hiddenAlbumPhotosStorageKey, JSON.stringify(Array.from(hiddenPhotoIds)));
+        photoCard.remove();
+        if (guestAlbumEmpty && !guestAlbumGrid.querySelector(".guest-album-photo")) {
+          guestAlbumEmpty.hidden = false;
+          guestAlbumEmpty.textContent = "No photos are visible in this browser's album view.";
+        }
+      } catch (error) {
+        console.error("Could not save the local album view preference.", error);
+        showToast("This photo could not be removed from the album view.");
+      }
+    });
+  }
+
+  fetchCloudinaryGallery();
+
+  if (guestPhotoInput && guestAlbumGrid) {
+    guestPhotoInput.addEventListener("change", async event => {
+      const files = Array.from(event.target.files || []);
+      if (!files.length) return;
+
+      let uploaded = 0;
+      const errors = [];
+      guestPhotoInput.disabled = true;
+
+      for (const file of files) {
+        if (guestPhotoStatus) guestPhotoStatus.textContent = `Uploading ${file.name} to Cloudinary...`;
+        try {
+          await uploadGuestPhoto(file);
+          uploaded += 1;
+        } catch (error) {
+          errors.push(error.message);
         }
       }
 
-      event.target.value = "";
-
-      if (added) {
-        if (galleryGrid) {
-          galleryGrid.scrollIntoView({
-            behavior: reduceOpeningMotion ? "auto" : "smooth",
-            block: "center"
-          });
-        }
-        showToast(`${added} photo${added === 1 ? " is" : "s are"} now previewed in the wedding gallery.`);
+      guestPhotoInput.disabled = false;
+      guestPhotoInput.value = "";
+      if (guestPhotoStatus) {
+        guestPhotoStatus.textContent = uploaded
+          ? `${uploaded} photo${uploaded === 1 ? "" : "s"} uploaded to Cloudinary and added to this browser's album.${errors.length ? ` ${errors.length} photo${errors.length === 1 ? "" : "s"} failed.` : ""}`
+          : errors[0] || "No photos were uploaded.";
       }
+      if (uploaded) {
+        showToast(`${uploaded} photo${uploaded === 1 ? "" : "s"} uploaded to the wedding album.`);
+        fetchCloudinaryGallery();
+      }
+      if (errors.length) console.error("One or more wedding photo uploads failed:", errors);
     });
   }
 

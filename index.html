@@ -40,6 +40,11 @@
 
   <!-- WEDDING INVITATION OPENING -->
   <div id="envelope-screen" aria-label="Open the wedding invitation">
+    <div class="floral-decoration floral-top-left" aria-hidden="true"></div>
+    <div class="floral-decoration floral-top-right" aria-hidden="true"></div>
+    <div class="floral-decoration floral-bottom-left" aria-hidden="true"></div>
+    <div class="floral-decoration floral-bottom-right" aria-hidden="true"></div>
+
     <div class="eagle-badge">
       <img src="assets/images/eagle.png" alt="Vangel27 eagle emblem" class="opening-eagle">
       <div class="brand-vangel">Vangel27</div>
@@ -52,8 +57,13 @@
       <div class="env-flap-right" aria-hidden="true"></div>
       <div class="env-flap-bottom" aria-hidden="true"></div>
 
-      <div class="pass-card" id="envelopePass">
+      <div class="pass-card invitation-suite-container" id="envelopePass">
+        <div class="gatefold-cover-left" aria-hidden="true"></div>
+        <div class="gatefold-cover-right" aria-hidden="true"></div>
         <div class="pass-frame-border">
+          <div class="central-photo-frame">
+            <img src="assets/images/wedding-portrait.jpg" alt="Dera and Ugochukwu" loading="lazy" decoding="async">
+          </div>
           <h2>WE'RE GETTING MARRIED</h2>
           <h3>Dera &amp; Ugochukwu</h3>
           <button type="button" class="open-pass-btn">Open Invitation <span aria-hidden="true">&rarr;</span></button>
@@ -68,6 +78,9 @@
       </button>
     </div>
     <p class="tap-hint">Tap the gold seal to open</p>
+    <p class="envelope-countdown" id="countdown-display" aria-live="polite">
+      Opening in <strong id="timer-number">3</strong>...
+    </p>
     <div class="envelope-intro-footer">Dera &amp; Ugochukwu</div>
   </div>
 
@@ -443,9 +456,9 @@
               <code>#F8F5EC</code>
             </li>
             <li class="dress-swatch">
-              <span class="dress-swatch__color" style="--swatch-color: #FFFFF0" aria-hidden="true"></span>
+              <span class="dress-swatch__color" style="--swatch-color: #D4BBA5" aria-hidden="true"></span>
               <span class="dress-swatch__name">Ivory</span>
-              <code>#FFFFF0</code>
+              <code>#D4BBA5</code>
             </li>
           </ul>
         </div>
@@ -505,7 +518,7 @@
          GALLERY
     ================================================== -->
 
-    <section class="gallery-section section-dark">
+    <section class="gallery-section section-dark" id="wedding-gallery">
 
       <div class="container">
 
@@ -704,13 +717,13 @@
             <span class="btn-icon" aria-hidden="true">📷</span>
             <span class="btn-text-wrap"><strong>Add / Upload Your Photos</strong><small>Choose from your phone or take a photo</small></span>
           </label>
-          <a class="action-choice-btn btn-view" href="https://photos.google.com/" target="_blank" rel="noopener noreferrer">
+          <a class="action-choice-btn btn-view" id="view-wedding-album" href="#guest-album-modal" aria-haspopup="dialog" aria-controls="guest-album-modal">
             <span class="btn-icon" aria-hidden="true">🖼️</span>
-            <span class="btn-text-wrap"><strong>View Wedding Album</strong><small>Open Google Photos</small></span>
+            <span class="btn-text-wrap"><strong>View Wedding Album</strong><small>View guest photos shared from Cloudinary</small></span>
           </a>
         </div>
         <p id="guest-photo-status" class="guest-photo-status" role="status" aria-live="polite"></p>
-        <p id="photo-upload-help" class="photo-upload-help">Selected photos preview in the gallery on this device. The album link will open the couple’s shared folder once its link is available.</p>
+        <p id="photo-upload-help" class="photo-upload-help">Guest photos upload to the shared Cloudinary album. New photos may take up to a minute to appear for everyone.</p>
 
       </div>
 
@@ -817,9 +830,15 @@
       <div id="bank-details-card" class="bank-details-card" hidden>
         <h3>Bank transfer details</h3>
         <dl>
-          <div><dt>Account name</dt><dd>To be provided</dd></div>
-          <div><dt>Bank</dt><dd>To be provided</dd></div>
-          <div><dt>Account number</dt><dd>To be provided</dd></div>
+          <div><dt>Account name</dt><dd>Vitus Chidera Ugwu</dd></div>
+          <div><dt>Bank</dt><dd>Kuda</dd></div>
+          <div class="account-number-row">
+            <dt>Account number</dt>
+            <dd>
+              <span>2047934030</span>
+              <button id="copy-account-number" class="copy-account-number" type="button" aria-label="Copy account number 2047934030">Copy Account Number</button>
+            </dd>
+          </div>
         </dl>
       </div>
       <p class="gift-thanks">Thank you for celebrating with us.</p>
@@ -845,7 +864,7 @@
 
       <h2 id="rsvp-modal-title">Kindly Respond</h2>
 
-      <form id="rsvp-form">
+      <form id="rsvp-form" action="https://formsubmit.co/chilwelleze@gmail.com" method="POST">
 
         <label>
           Full Name
@@ -886,6 +905,28 @@
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </label>
+
+        <label for="preset-messages">Choose a wish (or type your own)
+          <select id="preset-messages" name="preset-message">
+            <option value="">Choose a pre-written message</option>
+            <option value="Congratulations! Wishing you a lifetime of love and joy.">1. Congratulations! Wishing you a lifetime of love and joy.</option>
+            <option value="So thrilled to celebrate this special day with you both! God bless your union.">2. So thrilled to celebrate this special day with you both! God bless your union.</option>
+            <option value="Wishing you an amazing wedding day and an even better life together!">3. Wishing you an amazing wedding day and an even better life together!</option>
+            <option value="May your love grow stronger each and every passing year. Congratulations, Dera &amp; Ugochukwu!">4. May your love grow stronger each and every passing year. Congratulations!</option>
+            <option value="So happy for you two! Looking forward to an incredible celebration.">5. So happy for you two! Looking forward to an incredible celebration.</option>
+            <option value="Cheers to Dera &amp; Ugochukwu! May your home be filled with endless laughter and peace.">6. Cheers to the couple! May your home be filled with endless laughter and peace.</option>
+            <option value="It’s an honor to witness your beautiful beginning. Congratulations!">7. It’s an honor to witness your beautiful beginning. Congratulations!</option>
+            <option value="Wishing you joy, love, and happiness on your wedding day and as you start your new life together.">8. Wishing you joy, love, and happiness as you start your new life together.</option>
+            <option value="May the years ahead be filled with lasting joy. Have a wonderful celebration!">9. May the years ahead be filled with lasting joy. Have a wonderful celebration!</option>
+            <option value="God bless your new home! So excited to share in your joy.">10. God bless your new home! So excited to share in your joy.</option>
           </select>
         </label>
 
@@ -928,6 +969,22 @@
 
   </div>
 
+
+  <!-- =====================================================
+       GUEST PHOTO ALBUM
+  ====================================================== -->
+
+  <div id="guest-album-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="guest-album-title" aria-describedby="guest-album-copy" tabindex="-1">
+    <div class="modal-backdrop" data-modal-dismiss></div>
+    <div class="modal-card guest-album-card">
+      <button class="modal-close" type="button" data-modal-dismiss aria-label="Close wedding album">×</button>
+      <p class="eyebrow">Shared moments</p>
+      <h2 id="guest-album-title">View Wedding Album</h2>
+      <p id="guest-album-copy" class="guest-album-copy">Guest photos shared to Cloudinary appear here.</p>
+      <p id="guest-album-empty" class="guest-album-empty">No guest photos added yet. Choose “Add / Upload Your Photos” to preview them here.</p>
+      <div id="guest-album-grid" class="guest-album-grid" aria-live="polite"></div>
+    </div>
+  </div>
 
   <!-- =====================================================
        GALLERY LIGHTBOX
