@@ -1,27 +1,37 @@
 :root {
-  --olive-green: #535A32;
-  --deep-olive: #414526;
-  --off-white: #F8F5EC;
-  --soft-off-white: #F2EFE6;
-  --soft-sage: #A6AD8B;
-  --champagne-gold: #C5A15B;
-  --color-dark: #30351F;
-  --color-white: var(--off-white);
+  --olive-dark: #3B4D21;
+  --olive-primary: #556B2F;
+  --olive-light: #808C66;
+  --ivory-rich: #F4F0EA;
+  --off-white: #FDF9F5;
+  --ivory-bg: var(--ivory-rich);
+  --champagne: #E4DCCF;
+  --ivory-card: #FAF8F6;
+  --text-dark: #4A4A4A;
+  --text-muted: #808080;
+  --white: #FFFFFF;
+
+  /* Existing theme names kept as aliases for current component styles */
+  --olive-green: var(--olive-primary);
+  --deep-olive: var(--olive-dark);
+  --soft-off-white: var(--ivory-card);
+  --soft-sage: var(--olive-light);
+  --champagne-gold: var(--champagne);
+  --color-dark: var(--text-dark);
+  --color-white: var(--white);
 
   --burgundy: var(--olive-green);
   --burgundy-dark: var(--deep-olive);
   --burgundy-light: var(--olive-green);
-  --champagne: var(--champagne-gold);
-  --ivory: var(--off-white);
+  --ivory: var(--ivory-bg);
   --sage: var(--soft-sage);
   --dusty-rose: var(--deep-olive);
   --warm-taupe: var(--deep-olive);
   --cream: var(--soft-off-white);
   --paper: var(--off-white);
-  --white: var(--color-white);
   --black: var(--color-dark);
-  --muted: #686B58;
-  --border: rgba(83, 90, 50, 0.22);
+  --muted: var(--text-muted);
+  --border: rgba(85, 107, 47, 0.22);
 
   --serif: "Playfair Display", Georgia, serif;
   --elegant: "Cormorant Garamond", Georgia, serif;
@@ -294,84 +304,89 @@ a.scroll-discover,
    Dera & Ugochukwu — Vangel27
 ======================================== */
 :root {
-  --olive-green: #41482A;
-  --off-white: #F8F5EC;
-  --ivory: #FFFFF0;
-  --primary-color: var(--olive-green);
-  --background-color: var(--off-white);
-  --card-color: var(--ivory);
-  --text-color: var(--olive-green);
+  --olive-green: var(--olive-primary);
+  --ivory: var(--ivory-bg);
+  --primary-color: var(--olive-primary);
+  --background-color: var(--ivory-bg);
+  --card-color: var(--ivory-card);
+  --text-color: var(--text-dark);
 }
 
 body {
   background-color: var(--background-color);
   color: var(--text-color);
+  font-family: var(--serif);
 }
 
 h1,
 h2,
 h3,
 h4 {
-  color: var(--olive-green);
+  color: var(--olive-dark);
+  font-weight: 600;
 }
 
 .invitation-card,
 .wedding-card,
-.content-card {
-  background-color: var(--ivory);
-  color: var(--olive-green);
+.content-card,
+.event-card,
+.details-card,
+.modal-card {
+  background-color: var(--ivory-card);
+  color: var(--text-dark);
+  border-color: var(--champagne);
 }
 
 button,
 .btn,
 .primary-button {
-  background-color: var(--olive-green);
-  color: var(--ivory);
-  border: 1px solid var(--olive-green);
+  background-color: var(--olive-primary);
+  color: var(--white);
+  border: 1px solid var(--olive-primary);
   transition: background-color .3s ease, color .3s ease;
 }
 
 button:hover,
 .btn:hover,
 .primary-button:hover {
-  background-color: var(--ivory);
-  color: var(--olive-green);
+  background-color: var(--ivory-bg);
+  color: var(--olive-dark);
 }
 
 a {
-  color: var(--olive-green);
+  color: var(--olive-primary);
 }
 
 a:hover {
-  color: #626B40;
+  color: var(--olive-light);
 }
 
 .decorative-border {
-  border-color: var(--olive-green);
+  border-color: var(--olive-light);
 }
 
 input,
 select,
 textarea {
-  background-color: var(--ivory);
-  color: var(--olive-green);
-  border: 1px solid #B8B9A6;
+  background-color: var(--ivory-card);
+  color: var(--text-dark);
+  border: 1px solid var(--olive-light);
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid var(--olive-green);
+  outline: 2px solid var(--olive-primary);
   outline-offset: 2px;
 }
 
 footer {
-  background-color: var(--olive-green);
-  color: var(--ivory);
+  background-color: var(--olive-dark);
+  color: var(--white);
 }
 
 footer a {
-  color: var(--ivory);
+  color: var(--white);
 }
 
 footer a:hover {
@@ -379,8 +394,8 @@ footer a:hover {
 }
 
 ::selection {
-  background-color: var(--olive-green);
-  color: var(--ivory);
+  background-color: var(--olive-primary);
+  color: var(--white);
 }
 
 .envelope {
@@ -388,19 +403,19 @@ footer a:hover {
 }
 
 .invitation-paper {
-  background-color: var(--ivory);
-  color: var(--olive-green);
+  background-color: var(--ivory-bg);
+  color: var(--olive-primary);
 }
 
 .envelope-seal,
 #envelope-intro .envelope-seal {
-  background-color: var(--ivory);
-  color: var(--olive-green);
-  border-color: var(--olive-green);
+  background-color: var(--ivory-card);
+  color: var(--olive-dark);
+  border-color: var(--olive-primary);
 }
 
 .invitation-opening {
-  background-color: var(--off-white);
+  background-color: var(--ivory-bg);
 }
 
 /* Keep text legible on the site's olive sections. */
@@ -412,7 +427,7 @@ footer a:hover {
 .footer h2,
 .footer h3,
 .footer h4 {
-  color: var(--ivory);
+  color: var(--white);
 }
 
 /* FIX: COLOUR OF THE DAY SECTION */
@@ -423,8 +438,8 @@ footer a:hover {
 .wedding-colours,
 .wedding-colors,
 .dress-section {
-  background: var(--off-white) !important;
-  color: var(--olive-green) !important;
+  background: var(--ivory-bg) !important;
+  color: var(--olive-dark) !important;
 }
 
 .colour-of-the-day h1,
@@ -3785,11 +3800,10 @@ cite {
 ========================================= */
 
 :root {
-  --olive: #41482A;
-  --off-white: #F8F5EC;
-  --ivory: #FFFFF0;
-  --sage: #A6AD8B;
-  --gold: #B59A5A;
+  --olive: var(--olive-dark);
+  --ivory: var(--ivory-bg);
+  --sage: var(--olive-light);
+  --gold: var(--champagne);
 }
 
 /* Introduction section */
@@ -4138,5 +4152,245 @@ cite {
   .dress-swatches--all .dress-swatch code { font-size: 7px; }
   .bank-details-card dl > div { flex-direction: column; gap: 2px; }
   .bank-details-card dd { text-align: left; }
+}
+
+/* WEDDING PARTY ATTIRE */
+.dress-code-section {
+  padding: clamp(56px, 8vw, 80px) 20px;
+  background-color: var(--ivory-bg);
+  color: var(--text-dark);
+}
+
+.dress-code-section .section-header {
+  margin-bottom: 42px;
+  text-align: center;
+}
+
+.dress-code-section .section-header h2 {
+  margin-bottom: 10px;
+  color: var(--olive-dark);
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 2.5rem);
+}
+
+.dress-code-section .subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.attire-grid {
+  display: grid;
+  width: min(100%, 1200px);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 30px;
+  margin: 0 auto;
+}
+
+.attire-card {
+  overflow: hidden;
+  border: 1px solid var(--champagne);
+  border-radius: 12px;
+  background: var(--ivory-card);
+  box-shadow: 0 10px 30px rgba(59, 77, 40, .08);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.attire-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(59, 77, 40, .14);
+}
+
+.attire-img-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: var(--ivory-card);
+  line-height: 0;
+}
+
+.attire-img-wrap img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform .5s ease;
+}
+
+.attire-card:hover .attire-img-wrap img {
+  transform: scale(1.03);
+}
+
+.attire-info {
+  padding: 22px 20px 25px;
+  text-align: center;
+}
+
+.attire-info h3 {
+  margin-bottom: 6px;
+  color: var(--olive-dark);
+  font-family: var(--serif);
+  font-size: 1.4rem;
+}
+
+.attire-info .color-desc {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: .95rem;
+}
+
+.attire-palette {
+  margin-top: 46px;
+}
+
+.attire-guidance {
+  margin: 24px auto 0;
+  color: var(--text-muted);
+  font-size: .95rem;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .attire-card,
+  .attire-img-wrap img {
+    transition: none;
+  }
+
+  .attire-card:hover,
+  .attire-card:hover .attire-img-wrap img {
+    transform: none;
+  }
+}
+
+/* Official palette swatch colors */
+#dress-code .swatch-olive {
+  background-color: #556B2F !important;
+}
+
+#dress-code .swatch-offwhite {
+  background-color: #FDF9F5 !important;
+  border: 1px solid #E4DCCF !important;
+}
+
+#dress-code .swatch-ivory {
+  background-color: #D4B895 !important;
+  border: 1px solid #C5A880 !important;
+}
+
+/* RSVP typography and controls */
+#rsvp-modal .rsvp-container,
+#rsvp-modal #rsvp-form {
+  color: #333;
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+#rsvp-modal #rsvp-form label {
+  display: block;
+  margin: 0 0 7px;
+  color: var(--olive-primary);
+  font-size: .95rem;
+  font-weight: 600;
+}
+
+#rsvp-modal #rsvp-form input,
+#rsvp-modal #rsvp-form select,
+#rsvp-modal #rsvp-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 15px;
+  padding: 10px 12px;
+  border: 1px solid #dcd6cd;
+  border-radius: 6px;
+  background: var(--off-white);
+  color: var(--text-dark);
+  font: inherit;
+}
+
+#rsvp-modal #rsvp-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+#rsvp-modal #submit-btn {
+  width: 100%;
+  margin-top: 2px;
+  padding: 12px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--olive-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+#rsvp-modal #retry-whatsapp-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--olive-primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Sticky quick navigation for the invitation sections */
+.quick-nav {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--champagne);
+  background: var(--off-white);
+}
+
+.quick-nav .nav-btn {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: 1px solid #dcd6cd;
+  border-radius: 20px;
+  background: var(--ivory-card);
+  color: var(--olive-primary);
+  font-size: .9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+}
+
+.quick-nav .nav-btn:hover,
+.quick-nav .nav-btn:focus-visible {
+  border-color: var(--olive-primary);
+  background: var(--olive-primary);
+  color: var(--off-white);
+}
+
+.quick-nav .highlight-btn {
+  border-color: var(--olive-primary);
+  background: var(--olive-primary);
+  color: var(--off-white);
+}
+
+.quick-nav .highlight-btn:hover,
+.quick-nav .highlight-btn:focus-visible {
+  border-color: var(--olive-dark);
+  background: var(--olive-dark);
+}
+
+.quick-nav .nav-btn:focus-visible {
+  outline: 3px solid var(--champagne);
+  outline-offset: 3px;
+}
+
+#story,
+#wedding-details,
+#wedding-gallery,
+#rsvp {
+  scroll-margin-top: 88px;
+}
+
+@media (max-width: 480px) {
+  .quick-nav { gap: 7px; padding: 10px 8px; }
+  .quick-nav .nav-btn { padding: 7px 11px; font-size: .82rem; }
 }
 

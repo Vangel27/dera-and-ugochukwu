@@ -514,36 +514,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const rsvpPresetMessages = document.getElementById("preset-messages");
-  const rsvpMessageField = document.getElementById("rsvp-message");
-  if (rsvpPresetMessages && rsvpMessageField) {
-    rsvpPresetMessages.addEventListener("change", () => {
-      if (rsvpPresetMessages.value) {
-        rsvpMessageField.value = rsvpPresetMessages.value;
-      }
-    });
-  }
-
   if (rsvpForm && rsvpModal && rsvpSuccess) {
-    const rsvpNameField = document.getElementById("rsvp-name");
-    if (rsvpNameField) {
-      rsvpNameField.addEventListener("input", () => {
-        rsvpNameField.setCustomValidity("");
-      });
-    }
+    const nameField = document.getElementById("guest-name");
+    const attendanceField = document.getElementById("attendance");
+    const guestCountField = document.getElementById("guest-count");
+    const wishOptionField = document.getElementById("wish-option");
+    const messageField = document.getElementById("guest-message");
+    const successTitle = document.getElementById("rsvp-success-title");
+    const submitButton = document.getElementById("submit-btn");
+
+    if (nameField) nameField.addEventListener("input", () => nameField.setCustomValidity(""));
 
     rsvpForm.addEventListener("submit", async event => {
       event.preventDefault();
-
-      const nameField = document.getElementById("rsvp-name");
-      const phoneField = document.getElementById("rsvp-phone");
-      const attendanceField = document.getElementById("rsvp-attending");
-      const guestCountField = document.getElementById("rsvp-count");
-      const messageField = document.getElementById("rsvp-message");
-      const successMessage = document.getElementById("rsvp-success-message");
-      const successTitle = document.getElementById("rsvp-success-title");
-      const submitButton = rsvpForm.querySelector('[type="submit"]');
-      if (!nameField || !attendanceField || !guestCountField || !successMessage || !successTitle || !submitButton) return;
+      if (!nameField || !attendanceField || !guestCountField || !successTitle) return;
 
       const guestName = nameField.value.trim();
       nameField.setCustomValidity(guestName ? "" : "Please enter your full name.");
@@ -553,48 +537,57 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       nameField.setCustomValidity("");
 
-      if (rsvpError) rsvpError.textContent = "";
-      submitButton.disabled = true;
-      const originalButtonText = submitButton.textContent;
-      submitButton.textContent = "Sending RSVP…";
+      const customMessage = messageField ? messageField.value.trim() : "";
+      const selectedWish = wishOptionField ? wishOptionField.value : "";
+      const formValues = Object.fromEntries(new FormData(rsvpForm).entries());
+      formValues.subject = "New Wedding RSVP - Dera & Ugochukwu";
+      formValues.custom_message = customMessage || selectedWish;
+      delete formValues.message;
 
-      const payload = {
-        _subject: `💍 RSVP Response from ${guestName.replace(/\s+/g, " ")}: ${attendanceField.value === "yes" ? "Joyfully Attending" : "Declining"}`,
-        Guest_Name: guestName,
-        Phone_Number: phoneField ? phoneField.value.trim() : "",
-        Attendance: attendanceField.value === "yes" ? "Will attend" : "Unable to attend",
-        Guest_Count: guestCountField.value,
-        Message: messageField ? messageField.value.trim() : ""
-      };
+      const originalButtonText = submitButton ? submitButton.textContent : "Submit RSVP";
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending...";
+      }
+      if (rsvpError) rsvpError.textContent = "";
+
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 15000);
 
       try {
-        const response = await fetch("https://formsubmit.co/ajax/chilwelleze@gmail.com", {
+        const response = await fetch(rsvpForm.action, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(formValues),
+          signal: controller.signal
         });
         const result = await response.json();
-        if (!response.ok || result.success === false || result.success === "error") {
-          throw new Error(result.message || "The RSVP service did not accept the submission.");
+        if (!response.ok || result.success !== true) {
+          throw new Error(result.message || "The RSVP could not be confirmed.");
         }
 
-        successTitle.textContent = "Thank you!";
-        successMessage.textContent = `Thank you, ${guestName}. Your RSVP has been sent privately to the couple.`;
         rsvpForm.classList.add("hidden");
         rsvpSuccess.classList.remove("hidden");
+        successTitle.textContent = "Thank You!";
+        const successMessage = document.getElementById("rsvp-success-message");
+        if (successMessage) successMessage.textContent = "Your RSVP has been submitted successfully.";
         successTitle.focus();
       } catch (error) {
-        console.error("RSVP submission failed:", error);
         if (rsvpError) {
-          rsvpError.textContent = "We couldn’t send your RSVP just now. Please check your connection and try again.";
-          rsvpError.focus?.();
+          rsvpError.textContent = error.name === "AbortError"
+            ? "The request timed out. Please check your connection and try again."
+            : "We couldn't confirm your RSVP. Please check your connection and try again.";
+          rsvpError.focus();
         }
       } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = originalButtonText;
+        window.clearTimeout(timeoutId);
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
       }
     });
   }

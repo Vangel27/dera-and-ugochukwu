@@ -125,6 +125,13 @@
       </div>
     </section>
 
+    <nav class="quick-nav" aria-label="Quick navigation">
+      <a href="#story" class="nav-btn">Our Story</a>
+      <a href="#wedding-details" class="nav-btn">Event Details</a>
+      <a href="#wedding-gallery" class="nav-btn">Gallery</a>
+      <a href="#rsvp" class="nav-btn highlight-btn">RSVP</a>
+    </nav>
+
     <!-- =================================================
          COUNTDOWN
     ================================================== -->
@@ -429,44 +436,66 @@
          DRESS CODE
     ================================================== -->
 
-    <section class="dress-section section-dark">
+    <section id="dress-code" class="dress-code-section">
+      <div class="container text-center">
+        <div class="section-header">
+          <h2>Wedding Party Attire</h2>
+          <p class="subtitle">Our coordinated palette for the day</p>
+        </div>
 
-      <div class="container narrow reveal">
+        <div class="attire-grid">
+          <article class="attire-card">
+            <div class="attire-img-wrap">
+              <img src="assets/images/bride_and_groom.png" alt="Bride in a white lace gown and groom in an ivory suit" loading="lazy" decoding="async">
+            </div>
+            <div class="attire-info">
+              <h3>Bride &amp; Groom</h3>
+              <p class="color-desc">Classic White &amp; Off-White</p>
+            </div>
+          </article>
 
-        <p class="eyebrow">Come dressed to celebrate</p>
+          <article class="attire-card">
+            <div class="attire-img-wrap">
+              <img src="assets/images/bridesmaids.png" alt="Bridesmaids in rich olive green gowns" loading="lazy" decoding="async">
+            </div>
+            <div class="attire-info">
+              <h3>Bridesmaids</h3>
+              <p class="color-desc">Rich Olive Green</p>
+            </div>
+          </article>
 
-        <h2>
-          Dress Code
-          <span>Traditional Elegance</span>
-        </h2>
+          <article class="attire-card">
+            <div class="attire-img-wrap">
+              <img src="assets/images/groomsmen.png" alt="Groomsmen in warm ivory and champagne suits" loading="lazy" decoding="async">
+            </div>
+            <div class="attire-info">
+              <h3>Groomsmen</h3>
+              <p class="color-desc">Warm Ivory &amp; Champagne</p>
+            </div>
+          </article>
+        </div>
 
-        <p class="lead">An elegant traditional celebration</p>
-        <p class="dress-palette-note">Olive green, off-white, and ivory are the official colors of the day.</p>
-
-        <div class="dress-palette" role="group" aria-label="Official wedding color palette">
+        <div class="dress-palette attire-palette" role="group" aria-label="Official wedding color palette">
           <ul class="dress-swatches dress-swatches--all" aria-label="Olive green, off-white, and ivory">
             <li class="dress-swatch">
-              <span class="dress-swatch__color" style="--swatch-color: var(--olive-green)" aria-hidden="true"></span>
+              <span class="dress-swatch__color swatch-olive" style="--swatch-color: var(--olive-primary)" aria-hidden="true"></span>
               <span class="dress-swatch__name">Olive Green</span>
-              <code>#41482A</code>
+              <code>#556B2F</code>
             </li>
             <li class="dress-swatch">
-              <span class="dress-swatch__color" style="--swatch-color: var(--off-white)" aria-hidden="true"></span>
+              <span class="dress-swatch__color swatch-offwhite" style="--swatch-color: var(--ivory-bg)" aria-hidden="true"></span>
               <span class="dress-swatch__name">Off-White</span>
-              <code>#F8F5EC</code>
+              <code>#FDF9F5</code>
             </li>
             <li class="dress-swatch">
-              <span class="dress-swatch__color" style="--swatch-color: #D4BBA5" aria-hidden="true"></span>
+              <span class="dress-swatch__color swatch-ivory" style="--swatch-color: var(--ivory-card)" aria-hidden="true"></span>
               <span class="dress-swatch__name">Ivory</span>
-              <code>#D4BBA5</code>
+              <code>#D4B895</code>
             </li>
           </ul>
         </div>
-
-        <p class="dress-code-note">Guests are encouraged to dress elegantly within the wedding palette.</p>
-
+        <p class="attire-guidance">Guests are warmly invited to celebrate in elegant attire inspired by our wedding palette.</p>
       </div>
-
     </section>
 
 
@@ -474,7 +503,7 @@
          COUPLE STORY
     ================================================== -->
 
-    <section class="story-section section-light" aria-labelledby="story-heading">
+    <section class="story-section section-light" id="story" aria-labelledby="story-heading">
 
       <div class="container">
         <header class="section-heading reveal">
@@ -849,7 +878,7 @@
 
     <div class="modal-backdrop" data-modal-dismiss></div>
 
-    <div class="modal-card">
+    <div class="modal-card rsvp-container">
 
       <button
         class="modal-close"
@@ -864,96 +893,45 @@
 
       <h2 id="rsvp-modal-title">Kindly Respond</h2>
 
-      <form id="rsvp-form" action="https://formsubmit.co/chilwelleze@gmail.com" method="POST">
+      <form id="rsvp-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="d9a8ec0e-d64d-4ece-8b13-c8742bfebed0">
+        <input type="hidden" name="subject" value="New Wedding RSVP - Dera &amp; Ugochukwu">
+        <input type="hidden" name="ccemail" value="Chideravitus89@gmail.com">
+        <label for="guest-name">Full Name</label>
+        <input type="text" id="guest-name" name="name" autocomplete="name" required placeholder="Enter your full name">
 
-        <label>
-          Full Name
-          <input
-            id="rsvp-name"
-            name="name"
-            type="text"
-            autocomplete="name"
-            required
-            placeholder="Enter your full name"
-          >
-        </label>
+        <label for="attendance">Will You Attend?</label>
+        <select id="attendance" name="attendance" required>
+          <option value="">Select attendance</option>
+          <option value="Joyfully Attending">Joyfully Attending</option>
+          <option value="Regretfully Decline">Regretfully Decline</option>
+        </select>
 
-        <label>
-          Phone / WhatsApp (optional)
-          <input
-            id="rsvp-phone"
-            name="phone"
-            type="tel"
-            autocomplete="tel"
-            placeholder="e.g. 08012345678"
-          >
-        </label>
+        <label for="guest-count">Number of Guests</label>
+        <input type="number" id="guest-count" name="guests" min="1" max="5" value="1" required>
 
-        <label>
-          Will you attend?
-          <select id="rsvp-attending" name="attendance" required>
-            <option value="">Choose your response</option>
-            <option value="yes">Joyfully Accept</option>
-            <option value="no">Regretfully Decline</option>
-          </select>
-        </label>
+        <label for="wish-option">Select a Wish for Dera &amp; Ugochukwu</label>
+        <select id="wish-option" name="wishOption">
+          <option value="">Choose a pre-set wish or write your own</option>
+          <option value="Wishing you a lifetime of love and shared happiness!">Wishing you a lifetime of love and shared happiness!</option>
+          <option value="May your love grow stronger each and every passing year.">May your love grow stronger each and every passing year.</option>
+          <option value="So happy to celebrate this wonderful day with you both!">So happy to celebrate this wonderful day with you both!</option>
+          <option value="God bless your home and union with unending joy.">God bless your home and union with unending joy.</option>
+        </select>
 
-        <label>
-          Number Attending
-          <select id="rsvp-count" name="attending-count" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
-        </label>
+        <label for="guest-message">Or Write a Custom Wish (Optional)</label>
+        <textarea id="guest-message" name="message" rows="3" placeholder="Add a personal note..."></textarea>
 
-        <label for="preset-messages">Choose a wish (or type your own)
-          <select id="preset-messages" name="preset-message">
-            <option value="">Choose a pre-written message</option>
-            <option value="Congratulations! Wishing you a lifetime of love and joy.">1. Congratulations! Wishing you a lifetime of love and joy.</option>
-            <option value="So thrilled to celebrate this special day with you both! God bless your union.">2. So thrilled to celebrate this special day with you both! God bless your union.</option>
-            <option value="Wishing you an amazing wedding day and an even better life together!">3. Wishing you an amazing wedding day and an even better life together!</option>
-            <option value="May your love grow stronger each and every passing year. Congratulations, Dera &amp; Ugochukwu!">4. May your love grow stronger each and every passing year. Congratulations!</option>
-            <option value="So happy for you two! Looking forward to an incredible celebration.">5. So happy for you two! Looking forward to an incredible celebration.</option>
-            <option value="Cheers to Dera &amp; Ugochukwu! May your home be filled with endless laughter and peace.">6. Cheers to the couple! May your home be filled with endless laughter and peace.</option>
-            <option value="It’s an honor to witness your beautiful beginning. Congratulations!">7. It’s an honor to witness your beautiful beginning. Congratulations!</option>
-            <option value="Wishing you joy, love, and happiness on your wedding day and as you start your new life together.">8. Wishing you joy, love, and happiness as you start your new life together.</option>
-            <option value="May the years ahead be filled with lasting joy. Have a wonderful celebration!">9. May the years ahead be filled with lasting joy. Have a wonderful celebration!</option>
-            <option value="God bless your new home! So excited to share in your joy.">10. God bless your new home! So excited to share in your joy.</option>
-          </select>
-        </label>
-
-        <label>
-          Message
-          <textarea
-            id="rsvp-message"
-            name="message"
-            rows="3"
-            placeholder="Leave a message for the couple..."
-          ></textarea>
-        </label>
-
-        <button class="primary-button" type="submit">
-          Send RSVP
-        </button>
-
+        <button type="submit" id="submit-btn" class="primary-button submit-rsvp-btn">Submit RSVP</button>
         <p id="rsvp-error" class="rsvp-error" role="alert" aria-live="assertive" tabindex="-1"></p>
-
       </form>
 
       <div id="rsvp-success" class="rsvp-success hidden" role="status" aria-live="polite">
 
         <div class="success-icon">✓</div>
 
-        <h3 id="rsvp-success-title" tabindex="-1">Thank you!</h3>
-        <p id="rsvp-success-message"></p>
+        <h3 id="rsvp-success-title" tabindex="-1">Thank You!</h3>
+        <p id="rsvp-success-message">Your RSVP has been submitted successfully.</p>
 
         <button
           class="outline-button"
