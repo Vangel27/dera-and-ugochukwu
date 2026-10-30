@@ -4209,6 +4209,15 @@ cite {
   margin-bottom: 12px;
 }
 
+.event-card .nav-hint--quiet {
+  color: #888888;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.75rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
 /* WEDDING PARTY ATTIRE */
 .dress-code-section {
   padding: clamp(56px, 8vw, 80px) 20px;
