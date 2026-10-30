@@ -893,12 +893,10 @@
 
       <h2 id="rsvp-modal-title">Kindly Respond</h2>
 
-      <form id="rsvp-form" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="d9a8ec0e-d64d-4ece-8b13-c8742bfebed0">
-        <input type="hidden" name="subject" value="New Wedding RSVP - Dera &amp; Ugochukwu">
-        <input type="hidden" name="ccemail" value="Chideravitus89@gmail.com">
+      <form id="rsvp-form" method="POST" target="rsvp-submission-frame">
+        <input type="hidden" id="rsvp-request-id" name="request_id" value="">
         <label for="guest-name">Full Name</label>
-        <input type="text" id="guest-name" name="name" autocomplete="name" required placeholder="Enter your full name">
+        <input type="text" id="guest-name" name="name" autocomplete="name" maxlength="120" required placeholder="Enter your full name">
 
         <label for="attendance">Will You Attend?</label>
         <select id="attendance" name="attendance" required>
@@ -920,11 +918,20 @@
         </select>
 
         <label for="guest-message">Or Write a Custom Wish (Optional)</label>
-        <textarea id="guest-message" name="message" rows="3" placeholder="Add a personal note..."></textarea>
+        <textarea id="guest-message" name="message" rows="3" maxlength="2000" placeholder="Add a personal note..."></textarea>
 
         <button type="submit" id="submit-btn" class="primary-button submit-rsvp-btn">Submit RSVP</button>
         <p id="rsvp-error" class="rsvp-error" role="alert" aria-live="assertive" tabindex="-1"></p>
       </form>
+
+      <iframe
+        id="rsvp-submission-frame"
+        name="rsvp-submission-frame"
+        title="RSVP submission response"
+        aria-hidden="true"
+        tabindex="-1"
+        hidden
+      ></iframe>
 
       <div id="rsvp-success" class="rsvp-success hidden" role="status" aria-live="polite">
 

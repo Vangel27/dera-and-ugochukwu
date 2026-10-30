@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  // Replace this placeholder with the deployed Apps Script web app URL ending in /exec.
+  const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEbFXFbv4RSjQVT-USzcEEDTK_zBg-N1wCT0tIKsDy89wfk-G0nWYALhxr5JAuq0Rd/exec";
+
   /* =====================================================
      ELEMENTS
   ====================================================== */
@@ -36,6 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const rsvpForm = document.getElementById("rsvp-form");
   const rsvpSuccess = document.getElementById("rsvp-success");
   const rsvpError = document.getElementById("rsvp-error");
+  const rsvpSubmitButton = document.getElementById("submit-btn");
+  const rsvpRequestId = document.getElementById("rsvp-request-id");
+  const rsvpSubmissionFrame = document.getElementById("rsvp-submission-frame");
 
   const galleryLightbox = document.getElementById("gallery-lightbox");
   const lightboxClose = document.getElementById("lightbox-close");
@@ -404,6 +410,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let activeLayer = null;
   let layerTrigger = null;
   let previousBodyOverflow = "";
+  let rsvpSubmissionPending = false;
+  let activeRsvpRequestId = "";
+  let rsvpSubmissionTimeout = null;
 
   function openLayer(layer, trigger) {
     if (!layer) return;
@@ -430,6 +439,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function closeLayer(layer = activeLayer) {
     if (!layer) return;
+    if (layer === rsvpModal && rsvpSubmissionPending) return;
 
     layer.classList.add("hidden");
     if (layer !== activeLayer) return;
@@ -514,81 +524,119 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  if (rsvpForm && rsvpModal && rsvpSuccess) {
-    const nameField = document.getElementById("guest-name");
-    const attendanceField = document.getElementById("attendance");
-    const guestCountField = document.getElementById("guest-count");
-    const wishOptionField = document.getElementById("wish-option");
-    const messageField = document.getElementById("guest-message");
+  if (rsvpForm && rsvpSuccess && rsvpSubmissionFrame && rsvpSubmitButton && rsvpRequestId) {
     const successTitle = document.getElementById("rsvp-success-title");
-    const submitButton = document.getElementById("submit-btn");
+    const successMessage = document.getElementById("rsvp-success-message");
+    const originalSubmitLabel = rsvpSubmitButton.textContent;
 
-    if (nameField) nameField.addEventListener("input", () => nameField.setCustomValidity(""));
+    function finishRsvpFailure(message) {
+      if (!rsvpSubmissionPending) return;
+      rsvpSubmissionPending = false;
+      window.clearTimeout(rsvpSubmissionTimeout);
+      rsvpSubmitButton.disabled = false;
+      rsvpSubmitButton.textContent = originalSubmitLabel;
+      if (rsvpError) {
+        rsvpError.textContent = message;
+        rsvpError.focus();
+      }
+    }
 
-    rsvpForm.addEventListener("submit", async event => {
+    function isAppsScriptOrigin(origin) {
+      try {
+        const hostname = new URL(origin).hostname;
+        return hostname === "script.google.com" ||
+          hostname === "googleusercontent.com" ||
+          hostname.endsWith(".googleusercontent.com");
+      } catch {
+        return false;
+      }
+    }
+
+    window.addEventListener("message", event => {
+      const response = event.data;
+      if (
+        !rsvpSubmissionPending ||
+        !isAppsScriptOrigin(event.origin) ||
+        !response ||
+        response.type !== "vangel27-rsvp-response" ||
+        response.requestId !== activeRsvpRequestId
+      ) return;
+
+      if (typeof response.success !== "boolean" || typeof response.message !== "string") {
+        finishRsvpFailure("The RSVP service returned an invalid response. Your RSVP was not confirmed.");
+        return;
+      }
+
+      rsvpSubmissionPending = false;
+      window.clearTimeout(rsvpSubmissionTimeout);
+      rsvpSubmitButton.disabled = false;
+      rsvpSubmitButton.textContent = originalSubmitLabel;
+
+      if (response.success) {
+        if (rsvpError) rsvpError.textContent = "";
+        rsvpForm.classList.add("hidden");
+        rsvpSuccess.classList.remove("hidden");
+        if (successMessage) successMessage.textContent = "Your RSVP has been saved successfully.";
+        if (successTitle) successTitle.focus();
+      } else if (rsvpError) {
+        rsvpError.textContent = typeof response.message === "string"
+          ? response.message
+          : "Your RSVP could not be saved. Please check the details and try again.";
+        rsvpError.focus();
+      }
+    });
+
+    rsvpForm.addEventListener("submit", event => {
       event.preventDefault();
-      if (!nameField || !attendanceField || !guestCountField || !successTitle) return;
+      if (rsvpSubmissionPending) return;
 
-      const guestName = nameField.value.trim();
-      nameField.setCustomValidity(guestName ? "" : "Please enter your full name.");
       if (!rsvpForm.checkValidity()) {
         rsvpForm.reportValidity();
         return;
       }
-      nameField.setCustomValidity("");
 
-      const customMessage = messageField ? messageField.value.trim() : "";
-      const selectedWish = wishOptionField ? wishOptionField.value : "";
-      const formValues = Object.fromEntries(new FormData(rsvpForm).entries());
-      formValues.subject = "New Wedding RSVP - Dera & Ugochukwu";
-      formValues.custom_message = customMessage || selectedWish;
-      delete formValues.message;
-
-      const originalButtonText = submitButton ? submitButton.textContent : "Submit RSVP";
-      if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.textContent = "Sending...";
-      }
-      if (rsvpError) rsvpError.textContent = "";
-
-      const controller = new AbortController();
-      const timeoutId = window.setTimeout(() => controller.abort(), 15000);
-
+      let endpoint;
       try {
-        const response = await fetch(rsvpForm.action, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify(formValues),
-          signal: controller.signal
-        });
-        const result = await response.json();
-        if (!response.ok || result.success !== true) {
-          throw new Error(result.message || "The RSVP could not be confirmed.");
-        }
-
-        rsvpForm.classList.add("hidden");
-        rsvpSuccess.classList.remove("hidden");
-        successTitle.textContent = "Thank You!";
-        const successMessage = document.getElementById("rsvp-success-message");
-        if (successMessage) successMessage.textContent = "Your RSVP has been submitted successfully.";
-        successTitle.focus();
-      } catch (error) {
+        endpoint = new URL(GOOGLE_APPS_SCRIPT_URL);
+      } catch {
         if (rsvpError) {
-          rsvpError.textContent = error.name === "AbortError"
-            ? "The request timed out. Please check your connection and try again."
-            : "We couldn't confirm your RSVP. Please check your connection and try again.";
+          rsvpError.textContent = "RSVP submission is not configured yet. Please contact the couple directly.";
           rsvpError.focus();
         }
-      } finally {
-        window.clearTimeout(timeoutId);
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = originalButtonText;
-        }
+        return;
       }
+
+      if (
+        endpoint.protocol !== "https:" ||
+        endpoint.hostname !== "script.google.com" ||
+        !/^\/macros\/s\/[^/]+\/exec\/?$/.test(endpoint.pathname)
+      ) {
+        if (rsvpError) {
+          rsvpError.textContent = "The RSVP service URL is invalid. Please contact the couple directly.";
+          rsvpError.focus();
+        }
+        return;
+      }
+
+      activeRsvpRequestId = window.crypto && typeof window.crypto.randomUUID === "function"
+        ? window.crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      rsvpRequestId.value = activeRsvpRequestId;
+      rsvpForm.action = endpoint.href;
+      rsvpSubmissionPending = true;
+      rsvpSubmitButton.disabled = true;
+      rsvpSubmitButton.textContent = "Submitting...";
+      if (rsvpError) rsvpError.textContent = "";
+
+      rsvpSubmissionTimeout = window.setTimeout(() => {
+        finishRsvpFailure("No confirmation was received. Your RSVP may or may not have been saved; please contact the couple before trying again.");
+      }, 30000);
+
+      HTMLFormElement.prototype.submit.call(rsvpForm);
+    });
+
+    rsvpSubmissionFrame.addEventListener("error", () => {
+      finishRsvpFailure("A network error prevented confirmation. Your RSVP may or may not have been saved; please contact the couple before trying again.");
     });
   }
 
