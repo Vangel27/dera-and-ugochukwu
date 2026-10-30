@@ -4154,6 +4154,53 @@ cite {
   .bank-details-card dd { text-align: left; }
 }
 
+/* Improve footer readability while preserving normal letter casing. */
+.footer p,
+.footer span {
+  color: #FFFFFF !important;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  letter-spacing: 0.8px;
+}
+
+.footer .date {
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+}
+
+.replay-invitation {
+  background-color: #FFFFFF !important;
+  color: #3B4D28 !important;
+  border: 2px solid #FFFFFF !important;
+  padding: 14px 28px !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.2px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.direction-btn {
+  display: inline-block;
+  background-color: #3B4D28;
+  color: #FFFFFF;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s ease;
+}
+
+.direction-btn:hover {
+  background-color: #2c3a1e;
+}
+
 /* WEDDING PARTY ATTIRE */
 .dress-code-section {
   padding: clamp(56px, 8vw, 80px) 20px;
@@ -4393,4 +4440,3 @@ cite {
   .quick-nav { gap: 7px; padding: 10px 8px; }
   .quick-nav .nav-btn { padding: 7px 11px; font-size: .82rem; }
 }
-
