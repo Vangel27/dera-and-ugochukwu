@@ -4201,6 +4201,14 @@ cite {
   background-color: #2c3a1e;
 }
 
+.event-card .nav-hint {
+  color: #666666;
+  font-size: 0.85rem !important;
+  font-weight: 400 !important;
+  opacity: 0.85;
+  margin-bottom: 12px;
+}
+
 /* WEDDING PARTY ATTIRE */
 .dress-code-section {
   padding: clamp(56px, 8vw, 80px) 20px;
