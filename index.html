@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Great+Vibes&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
 
@@ -125,10 +125,11 @@
     </section>
 
     <nav class="quick-nav" aria-label="Quick navigation">
-      <a href="#story" class="nav-btn">Our Story</a>
-      <a href="#wedding-details" class="nav-btn">Event Details</a>
-      <a href="#wedding-gallery" class="nav-btn">Gallery</a>
+      <a href="#story" class="nav-btn nav-link">Our Story</a>
+      <a href="#wedding-details" class="nav-btn nav-link">Event Details</a>
+      <a href="#wedding-gallery" class="nav-btn nav-link">Gallery</a>
       <a href="#rsvp" class="nav-btn highlight-btn">RSVP</a>
+      <a href="#wishing-well" class="nav-btn nav-link gift-nav-btn">Gift</a>
     </nav>
 
     <!-- =================================================
@@ -215,7 +216,7 @@
             </p>
 
             <div class="event-time">
-              12PM – 2PM
+              11AM – 1PM
             </div>
 
             <p class="nav-hint nav-hint--quiet">
@@ -403,7 +404,7 @@
           <li class="timeline-item reveal">
             <span class="timeline-dot" aria-hidden="true"></span>
             <div class="timeline-content">
-              <time class="timeline-time" datetime="2027-01-04T12:00:00+01:00">12PM – 2PM</time>
+              <time class="timeline-time" datetime="2027-01-04T11:00:00+01:00">11AM – 1PM</time>
               <svg class="timeline-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M12 4V1m-2 3h4"></path>
               </svg>
@@ -624,7 +625,7 @@
          WISHING WELL
     ================================================== -->
 
-    <section class="gift-section section-light">
+    <section id="wishing-well" class="gift-section section-light">
 
       <div class="container narrow reveal">
 
@@ -1012,6 +1013,5 @@
 
   <script src="js/main.js"></script>
   <script src="js/animations.js"></script>
-
 </body>
 </html>

@@ -4457,3 +4457,135 @@ cite {
   .quick-nav { gap: 7px; padding: 10px 8px; }
   .quick-nav .nav-btn { padding: 7px 11px; font-size: .82rem; }
 }
+
+/* =========================================================
+   HIGH-CONTRAST GIFT SECTION & MODAL (MONTSERRAT)
+   ========================================================= */
+
+#wishing-well,
+.wishing-well,
+.wishing-well-section,
+.gift-section,
+section[id*="gift"],
+section[id*="wishing"] {
+  background-color: #ffffff !important;
+  color: #141a0f !important;
+  font-family: 'Montserrat', sans-serif !important;
+  opacity: 1 !important;
+}
+
+#wishing-well *,
+.wishing-well *,
+.wishing-well-section *,
+.gift-section *,
+#gift-modal *,
+.gift-modal *,
+.modal-content *,
+.message-modal-card *,
+.bank-details-card * {
+  font-family: 'Montserrat', sans-serif !important;
+  opacity: 1 !important;
+}
+
+#wishing-well h1,
+#wishing-well h2,
+#wishing-well h3,
+.gift-section h1,
+.gift-section h2,
+.gift-section h3 {
+  color: #1c2612 !important;
+  font-weight: 700 !important;
+}
+
+#wishing-well p,
+.wishing-well-section p,
+.gift-section p {
+  color: #1f2718 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+}
+
+#gift-modal .modal-card,
+#gift-modal .message-modal-card,
+.gift-modal .modal-card,
+.gift-modal .message-modal-card,
+.gift-modal-card {
+  background-color: #ffffff !important;
+  color: #141a0f !important;
+  border: 2px solid #3f5219 !important;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35) !important;
+}
+
+#gift-modal h2,
+#gift-modal h3,
+.gift-modal h2,
+.gift-modal h3,
+.bank-details-card h3,
+.bank-details-card h4 {
+  color: #141a0f !important;
+  font-weight: 700 !important;
+}
+
+#gift-modal p,
+.gift-modal p {
+  color: #1f2718 !important;
+  font-weight: 600 !important;
+}
+
+#gift-modal .modal-close,
+#gift-modal .close-modal,
+.gift-modal .modal-close,
+.gift-modal .close-modal {
+  color: #141a0f !important;
+  background-color: #eef2e8 !important;
+  font-weight: 700 !important;
+  border-radius: 50% !important;
+}
+
+.bank-details-card,
+.bank-details-box {
+  background-color: #f8faf5 !important;
+  border: 2px solid #3f5219 !important;
+  color: #11160c !important;
+}
+
+.bank-details-card dt,
+.bank-details-card label,
+.bank-details-card .label,
+.bank-details-box dt,
+.bank-details-box label,
+.bank-details-box .label {
+  color: #2d3822 !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.bank-details-card dd,
+.bank-details-card strong,
+.bank-details-card .value,
+.bank-details-box dd,
+.bank-details-box strong,
+.bank-details-box .value,
+#account-number {
+  color: #090d06 !important;
+  font-weight: 800 !important;
+  font-size: 1.15rem !important;
+}
+
+#wishing-well button,
+#wishing-well .btn,
+#wishing-well .primary-button,
+#gift-modal button,
+#gift-modal .btn,
+#gift-modal .primary-button,
+.copy-account-number,
+.bank-details-toggle {
+  background-color: #364714 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  border: none !important;
+}
