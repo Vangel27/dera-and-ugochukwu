@@ -15,6 +15,11 @@
 const SPREADSHEET_ID_PROPERTY = "SPREADSHEET_ID";
 const SHEET_NAME = "RSVPs";
 const WEDDING_SITE_ORIGIN = "https://vangel27.github.io";
+const RSVP_NOTIFICATION_RECIPIENTS = [
+  "nelsonchiemezie8@gmail.com",
+  "chideravitus89@gmail.com"
+];
+const RSVP_NOTIFICATION_SUBJECT = "New Wedding RSVP – Dera & Ugochukwu | Vangel27";
 const RSVP_HEADERS = [
   "Timestamp",
   "Guest Name",
@@ -44,12 +49,14 @@ function doPost(e) {
       throw safeError_("The RSVP service is busy. Please wait a moment and try again.");
     }
 
+    let receivedAt = null;
     try {
       const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
       const sheet = getRsvpSheet_(spreadsheet);
       ensureHeaders_(sheet);
+      receivedAt = new Date();
       sheet.appendRow([
-        new Date(),
+        receivedAt,
         protectFormula_(submission.name),
         submission.attendance,
         submission.guestCount,
@@ -59,6 +66,13 @@ function doPost(e) {
       SpreadsheetApp.flush();
     } finally {
       lock.releaseLock();
+    }
+
+    try {
+      sendRsvpNotification_(submission, receivedAt);
+    } catch (emailError) {
+      console.error("RSVP was saved, but email notification failed: " +
+        (emailError && emailError.message ? emailError.message : "Unknown email error"));
     }
 
     return responsePage_({
@@ -144,6 +158,63 @@ function ensureHeaders_(sheet) {
   throw new Error("The RSVP sheet has an unexpected header row.");
 }
 
+function sendRsvpNotification_(submission, receivedAt) {
+  const timeZone = Session.getScriptTimeZone() || "Africa/Lagos";
+  const formattedDate = Utilities.formatDate(
+    receivedAt,
+    timeZone,
+    "EEEE, MMMM d, yyyy 'at' h:mm:ss a"
+  );
+
+  const guestName = escapeHtml_(submission.name);
+  const attendance = escapeHtml_(submission.attendance);
+  const guestCount = String(submission.guestCount);
+  const weddingWish = submission.wish
+    ? escapeHtml_(submission.wish)
+    : "No wedding wish selected";
+  const personalMessage = submission.message
+    ? escapeHtml_(submission.message).replace(/\n/g, "<br>")
+    : "No personal message";
+
+  const htmlBody =
+    "<div style=\"margin:0;padding:24px;background:#f3f1ea;font-family:Arial,sans-serif;color:#241f19;\">" +
+      "<div style=\"max-width:620px;margin:0 auto;background:#ffffff;border:1px solid #ded8c9;border-radius:12px;overflow:hidden;\">" +
+        "<div style=\"padding:22px 28px;background:#556b2f;color:#ffffff;text-align:center;\">" +
+          "<div style=\"font-size:12px;letter-spacing:2px;font-weight:bold;\">VANGEL27</div>" +
+          "<h1 style=\"margin:8px 0 0;font-size:24px;line-height:1.25;\">Dera &amp; Ugochukwu</h1>" +
+          "<p style=\"margin:6px 0 0;font-size:14px;\">Wedding RSVP Notification</p>" +
+        "</div>" +
+        "<div style=\"padding:28px;\">" +
+          "<p style=\"margin:0 0 20px;font-size:16px;line-height:1.6;\">A new guest has submitted an RSVP.</p>" +
+          "<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"border-collapse:collapse;font-size:15px;\">" +
+            "<tr><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;font-weight:bold;width:38%;\">Guest name</td><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;\">" + guestName + "</td></tr>" +
+            "<tr><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;font-weight:bold;\">Attendance</td><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;\">" + attendance + "</td></tr>" +
+            "<tr><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;font-weight:bold;\">Number of guests</td><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;\">" + guestCount + "</td></tr>" +
+            "<tr><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;font-weight:bold;vertical-align:top;\">Wedding wish</td><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;\">" + weddingWish + "</td></tr>" +
+            "<tr><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;font-weight:bold;vertical-align:top;\">Personal message</td><td style=\"padding:12px;border-bottom:1px solid #ebe7dc;\">" + personalMessage + "</td></tr>" +
+            "<tr><td style=\"padding:12px;font-weight:bold;vertical-align:top;\">Received</td><td style=\"padding:12px;\">" + escapeHtml_(formattedDate) + "</td></tr>" +
+          "</table>" +
+        "</div>" +
+        "<div style=\"padding:16px 28px;background:#f8f6f0;text-align:center;font-size:12px;color:#665f55;\">Vangel27 Wedding Invitation</div>" +
+      "</div>" +
+    "</div>";
+
+  MailApp.sendEmail({
+    to: RSVP_NOTIFICATION_RECIPIENTS.join(","),
+    subject: RSVP_NOTIFICATION_SUBJECT,
+    htmlBody: htmlBody
+  });
+}
+
+function escapeHtml_(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function responsePage_(payload) {
   const safeJson = JSON.stringify(payload).replace(/</g, "\\u003c");
   const targetOrigin = JSON.stringify(WEDDING_SITE_ORIGIN);
@@ -165,4 +236,8 @@ function safeError_(message) {
   const error = new Error(message);
   error.isSafeForGuest = true;
   return error;
+}
+
+function authorizeEmailPermission() {
+  return MailApp.getRemainingDailyQuota();
 }
